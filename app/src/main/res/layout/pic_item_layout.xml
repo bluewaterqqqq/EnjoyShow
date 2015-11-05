@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.zmdx.enjoyshow.fragment.pic.ui.SquareFramelayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="5dp"
+    android:paddingRight="5dp">
+
+    <ImageView
+        android:id="@+id/coverImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
+    <TextView
+        android:id="@+id/reportCount"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:textSize="13dp"
+        android:gravity="center"
+        android:layout_gravity="right|top"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="4dp"
+        android:background="#40000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:background="#40000000"
+        android:gravity="center_vertical"
+        android:layout_gravity="bottom"
+        android:paddingRight="6dp"
+        android:paddingLeft="6dp">
+
+        <ImageView
+            android:id="@+id/headImage"
+            android:layout_width="16dp"
+            android:layout_height="16dp" />
+
+        <TextView
+            android:id="@+id/userText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:ellipsize="middle"
+            android:textSize="12dp"
+            android:singleLine="true"
+            android:textColor="#ccffffff" />
+    </LinearLayout>
+
+</com.zmdx.enjoyshow.fragment.pic.ui.SquareFramelayout>
