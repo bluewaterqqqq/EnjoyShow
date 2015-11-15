@@ -118,8 +118,6 @@ public class ThreadPool {
         sDynamicPool = new DynamicThreadPool(new LinkedBlockingQueue<Runnable>(), minThreads, maxThreads,0,
                 Thread.MIN_PRIORITY + 1);
 
-        AsyncTask.setDefaultExecutor(sDynamicPool);
-
         // critical pool runner
         final int minThreadsForCritical = Math.max(2, CPU_CORES);
         final int maxThreadsForCritical = lowPhysicalMemoryDevices() ? CPU_CORES + 1 : CPU_CORES * 2;

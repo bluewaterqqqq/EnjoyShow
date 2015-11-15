@@ -99,23 +99,6 @@ public abstract class BasePicFragment extends Fragment implements SwipeRefreshLa
         mRefreshView.setOnRefreshListener(this);
     }
 
-    private void setSuitableSpanSizeLookup(int count) {
-        if (count <= 0) {
-            return;
-        }
-        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-
-            @Override
-            public int getSpanSize(int position) {
-                if (position == 0) {
-                    return 4;
-                } else{
-                    return 2;
-                }
-            }
-        });
-    }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
