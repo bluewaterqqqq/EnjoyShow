@@ -80,41 +80,14 @@ public class DetectNewestFragment extends Fragment implements SwipeRefreshLayout
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRefreshView = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(getContext(), 6);
-        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        mLayoutManager = new GridLayoutManager(getContext(), 3);
 
-            @Override
-            public int getSpanSize(int position) {
-                if (position <= 3) {
-                    return 3;
-                } else {
-                    return 2;
-                }
-            }
-        });
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new PicAdapter(getContext(), mPics);
         mRecyclerView.setAdapter(mAdapter);
 
         mRefreshView.setOnRefreshListener(this);
-    }
-
-    private void setSuitableSpanSizeLookup(int count) {
-        if (count <= 0) {
-            return;
-        }
-        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-
-            @Override
-            public int getSpanSize(int position) {
-                if (position == 0) {
-                    return 4;
-                } else {
-                    return 2;
-                }
-            }
-        });
     }
 
     @Override

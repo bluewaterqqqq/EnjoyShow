@@ -140,6 +140,12 @@ public class DetectLookupFragment extends Fragment implements View.OnClickListen
 
     private void initViews(FrameLayout entireView) {
         mSwipeView = (SwipeFlingAdapterView) entireView.findViewById(R.id.swipeCardView);
+        mSwipeView.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClicked(int itemPosition, Object dataObject) {
+                LogHelper.d(TAG, "swipeView onItemClicked");
+            }
+        });
         mCardAdapter = new ESCardStackAdapter(getContext(), mPics);
         mSwipeView.setAdapter(mCardAdapter);
         mSwipeView.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
