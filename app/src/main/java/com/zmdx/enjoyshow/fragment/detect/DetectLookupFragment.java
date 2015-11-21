@@ -11,13 +11,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.andtinder.model.Orientations;
-import com.andtinder.view.CardContainer;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.entity.ESPhoto;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
+import com.zmdx.enjoyshow.ui.swipecard.SwipeFlingAdapterView;
 import com.zmdx.enjoyshow.user.ESUserManager;
 import com.zmdx.enjoyshow.utils.LogHelper;
 
@@ -25,21 +24,22 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 /**
  * Created by zhangyan on 15/11/15.
  */
-public class DetectLookupFragment extends Fragment {
+public class DetectLookupFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = "DetectLookupFragment";
     private static final int LIMIT = 15;
     private static final String PIC_WIDTH = "280";
 
-    private LinearLayout mEntireView;
+    private FrameLayout mEntireView;
 
     private ESCardStackAdapter mCardAdapter;
 
@@ -49,11 +49,17 @@ public class DetectLookupFragment extends Fragment {
 
     private String mLastId;
 
+    private ImageView mLikeBtn;
+
+    private ImageView mDislikeBtn;
+
+    private SwipeFlingAdapterView mSwipeView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mEntireView == null) {
-            mEntireView = (LinearLayout) inflater.inflate(R.layout.detect_lookup_layout, container, false);
+            mEntireView = (FrameLayout) inflater.inflate(R.layout.detect_lookup_layout, container, false);
             initViews(mEntireView);
             mPics.clear();
             pullData(false);
@@ -86,7 +92,7 @@ public class DetectLookupFragment extends Fragment {
                 List<ESPhoto> data = parseResponse2Data(response);
                 if (data != null && data.size() > 0) {
                     mPics.addAll(data);
-                    mCardAdapter.notifyDataSetChanged();
+                                        mCardAdapter.notifyDataSetChanged();
                 }
             }
         }, new Response.ErrorListener() {
@@ -112,6 +118,7 @@ public class DetectLookupFragment extends Fragment {
                     if (data != null) {
                         list = new ArrayList<ESPhoto>();
                         list.addAll(ESPhoto.convertListByJSON(data));
+                        mLastId = list.get(list.size() - 1).getOrderId();
                     }
                 }
             } catch (JSONException e) {
@@ -131,35 +138,65 @@ public class DetectLookupFragment extends Fragment {
         return UrlBuilder.getUrl(ActionConstants.ACTION_DETECT_LOOKUP, params);
     }
 
-    private void initViews(LinearLayout entireView) {
-        CardContainer cardView = (CardContainer) entireView.findViewById(R.id.cardLayout);
-        cardView.setOrientation(Orientations.Orientation.Ordered);
+    private void initViews(FrameLayout entireView) {
+        mSwipeView = (SwipeFlingAdapterView) entireView.findViewById(R.id.swipeCardView);
         mCardAdapter = new ESCardStackAdapter(getContext(), mPics);
-        cardView.setAdapter(mCardAdapter);
-        cardView.setOnCar
-        cardView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        LogHelper.d(TAG, "down");
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        LogHelper.d(TAG, "up");
+        mSwipeView.setAdapter(mCardAdapter);
+        mSwipeView.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
 
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        LogHelper.d(TAG, "move");
-                    default:
+            @Override
+            public void removeFirstObjectInAdapter() {
+                LogHelper.d(TAG, "removeFirstObjectInAdapter");
+                if (mPics.size() > 0) {
+                    mPics.remove(0);
+                    mCardAdapter.notifyDataSetChanged();
+                    if (mPics.size() < 3) {
+                        LogHelper.d(TAG, "还剩" + mPics.size() + "卡片,开始增量拉取");
+                        pullData(true);
+                    }
                 }
-                return false;
+            }
+
+            @Override
+            public void onLeftCardExit(Object dataObject) {
+                LogHelper.d(TAG, "onLeftCardExit");
+
+            }
+
+            @Override
+            public void onRightCardExit(Object dataObject) {
+                LogHelper.d(TAG, "onRightCardExit");
+
+            }
+
+            @Override
+            public void onAdapterAboutToEmpty(int itemsInAdapter) {
+                LogHelper.d(TAG, "onAdapterAboutToEmpty");
+
+            }
+
+            @Override
+            public void onScroll(float scrollProgressPercent) {
             }
         });
-        //        cardView.setO
+
+        mLikeBtn = (ImageView) mEntireView.findViewById(R.id.like);
+        mDislikeBtn = (ImageView) mEntireView.findViewById(R.id.dislike);
+        mLikeBtn.setOnClickListener(this);
+        mDislikeBtn.setOnClickListener(this);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v == mLikeBtn) {
+            mSwipeView.swipeRight();
+        } else if (v == mDislikeBtn) {
+            mSwipeView.swipeLeft();
+        }
     }
 }

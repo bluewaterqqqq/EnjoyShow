@@ -29,7 +29,6 @@ public class ESViewPager extends ViewPager {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (mDisableSroll) {
-            LogHelper.d("DetectLookupFragment", "onInterceptTouchEvent");
             return false;
         }
         return super.onInterceptTouchEvent(ev);
@@ -38,7 +37,6 @@ public class ESViewPager extends ViewPager {
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (mDisableSroll) {
-            LogHelper.d("DetectLookupFragment", "onTouchEvent");
             return false;
         }
         return super.onTouchEvent(ev);

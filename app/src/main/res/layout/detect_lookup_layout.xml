@@ -1,24 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:id="@+id/detectContainer"
-              android:gravity="center_horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             android:orientation="vertical"
+             android:id="@+id/detectContainer"
+             android:background="#ffffff"
+             android:paddingTop="30dp"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
-    <com.andtinder.view.CardContainer
-            android:id="@+id/cardLayout"
+    <com.zmdx.enjoyshow.ui.swipecard.SwipeFlingAdapterView
+            android:id="@+id/swipeCardView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:card_orientation="ordered"
-            />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            app:rotation_degrees="16"
+            app:max_visible="4"
+            app:min_adapter_stack="6"/>
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:gravity="center" android:layout_marginBottom="30dp"
+                  android:layout_gravity="bottom">
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:text="sample"/>
+        <ImageView android:layout_width="60dp" android:layout_height="60dp"
+                   android:background="@drawable/dislike_bg" android:id="@+id/dislike"/>
+        <ImageView android:layout_width="60dp" android:layout_height="60dp"
+                   android:background="@drawable/detect_like_bg" android:id="@+id/like"
+                   android:layout_marginLeft="40dp"/>
     </LinearLayout>
 
 
-</LinearLayout>
+</FrameLayout>
