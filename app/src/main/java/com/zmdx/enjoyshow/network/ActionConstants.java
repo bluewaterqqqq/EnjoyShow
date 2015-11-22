@@ -14,5 +14,14 @@ public class ActionConstants {
     public static final String ACTION_DETECT_LATEST = CONTEXT + "photo_newestPhotoSet.action";
     public static final String ACTION_DETECT_LOOKUP = CONTEXT + "photo_browsePhotoSet.action";
 
+    public static final String ACTION_IMAGE_DETAIL = CONTEXT + "photo_viewPictureSet.action";
+
+    public static final String ACTION_SEND_COMMENT = CONTEXT + "/photo_replyComment.action";
+
+    public static final String ACTION_PRESS_PRAISE = CONTEXT + "/photo_praisePhoto.action";
+
+    public static final String ACTION_CANCEL_PRAISE = CONTEXT + "/photo_cancelPraisePhoto.action";
+
+
 
 }

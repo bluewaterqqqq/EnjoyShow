@@ -12,6 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
+import com.zmdx.enjoyshow.fragment.detail.ImageDetailActivity;
 import com.zmdx.enjoyshow.entity.ESPhoto;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
@@ -28,7 +29,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 /**
  * Created by zhangyan on 15/11/15.
@@ -143,7 +143,11 @@ public class DetectLookupFragment extends Fragment implements View.OnClickListen
         mSwipeView.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
-                LogHelper.d(TAG, "swipeView onItemClicked");
+                if (dataObject instanceof ESPhoto) {
+                    ESPhoto item = (ESPhoto) dataObject;
+                    ImageDetailActivity.start(getContext(), item.getId());
+
+                }
             }
         });
         mCardAdapter = new ESCardStackAdapter(getContext(), mPics);

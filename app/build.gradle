@@ -29,5 +29,4 @@ dependencies {
     compile 'com.android.support:design:23.1.0'
     compile 'com.android.support:cardview-v7:23.1.0'
     compile 'com.android.support:gridlayout-v7:23.1.0'
-    compile 'com.felipecsl.asymmetricgridview:library:2.0.1'
 }
