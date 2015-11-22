@@ -8,7 +8,7 @@ import org.json.JSONObject;
  */
 public class ESUser {
     private String age = "";
-    private String gender;//性别
+    private String gender;//性别 0未知 1男 2女
     private String headPortrait;//头像
     private int id;
     private int orgId;

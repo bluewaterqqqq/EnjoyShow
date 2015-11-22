@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:clickable="true"
+                android:background="@drawable/item_selector"
+                android:layout_height="match_parent">
+
+    <ImageView android:layout_width="40dp" android:layout_height="40dp" android:scaleType="centerCrop"
+               android:id="@+id/headIv" android:layout_centerVertical="true" android:layout_marginRight="8dp"
+               android:layout_marginBottom="6dp"/>
+
+    <TextView android:id="@+id/titleTv" android:layout_width="wrap_content"
+              android:layout_height="wrap_content" style="@style/titleStyle"
+              android:layout_toRightOf="@id/headIv" android:layout_marginTop="5dp"/>
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/ageTv"
+              android:layout_alignLeft="@id/titleTv" android:layout_below="@id/titleTv"
+              style="@style/contentStyle" android:layout_marginBottom="6dp"
+              android:layout_marginTop="5dp"/>
+    <View android:layout_width="13dp" android:layout_height="13dp" android:id="@+id/genderView"
+          android:layout_toRightOf="@id/ageTv" android:layout_marginLeft="4dp"
+          android:layout_below="@id/titleTv" android:layout_marginTop="7dp" />
+</RelativeLayout>

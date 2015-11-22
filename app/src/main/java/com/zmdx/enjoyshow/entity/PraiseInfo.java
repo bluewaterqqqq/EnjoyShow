@@ -1,5 +1,6 @@
 package com.zmdx.enjoyshow.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,11 +12,11 @@ import com.zmdx.enjoyshow.utils.LogHelper;
 /**
  * Created by zhangyan on 15/11/22.
  */
-public class PraiseInfo {
+public class PraiseInfo implements Serializable{
     private String age;
-    private String gender;
+    private String gender; // 性别. 0未知 1男 2女
     private String headPortrait;
-    private String id;
+    private String id;//点赞人的userId
     private String loginName;
     private String orderId;
     private String orgId;

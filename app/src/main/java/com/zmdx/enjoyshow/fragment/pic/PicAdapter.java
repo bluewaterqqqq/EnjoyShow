@@ -16,7 +16,9 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.entity.ESPhoto;
+import com.zmdx.enjoyshow.fragment.detail.ImageDetailActivity;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
+import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
 import com.zmdx.enjoyshow.utils.LogHelper;
 import com.zmdx.enjoyshow.utils.UIUtils;
 
@@ -39,27 +41,8 @@ public class PicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public PicAdapter(Context context, List<ESPhoto> data) {
         mData = data;
         mInflater = LayoutInflater.from(context);
-        mCoverImageOptions = new DisplayImageOptions.Builder()
-                .cacheOnDisk(true)
-                .cacheInMemory(true)
-                .showImageOnLoading(R.drawable.me_icon_nor)
-                .showImageOnFail(R.drawable.me_icon_nor)
-                .showImageForEmptyUri(R.drawable.me_icon_nor)
-                .bitmapConfig(Bitmap.Config.ARGB_8888)
-                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-                .displayer(new FadeInBitmapDisplayer(100))
-//                .displayer(new RoundedBitmapDisplayer(UIUtils.dipToPx(context, 3)))
-                .build();
-        mHeaderImageOptions = new DisplayImageOptions.Builder()
-                .cacheOnDisk(true)
-                .cacheInMemory(true)
-                .showImageOnLoading(R.drawable.me_icon_nor)
-                .showImageOnFail(R.drawable.me_icon_nor)
-                .showImageForEmptyUri(R.drawable.me_icon_nor)
-                .bitmapConfig(Bitmap.Config.ARGB_8888)
-                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-                .displayer(new RoundedBitmapDisplayer(UIUtils.dipToPx(context, 10)))
-                .build();
+        mCoverImageOptions = ImageLoaderOptionsUtils.getCoverImageOptions();
+        mHeaderImageOptions = ImageLoaderOptionsUtils.getHeadImageOptions();
     }
 
     @Override
@@ -73,7 +56,7 @@ public class PicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         ESPhoto item = mData.get(position);
         ImageLoaderManager.getImageLoader().displayImage(item.getCoverUrl(), pHolder.coverView, mCoverImageOptions);
         ImageLoaderManager.getImageLoader().displayImage(item.getUser().getHeadPortrait(), pHolder.headView, mHeaderImageOptions);
-        pHolder.reportView.setText(item.getReport() + "");
+        pHolder.reportView.setText(item.getPhotoCount() + "");
         pHolder.userNameView.setText(item.getUser().getUserName());
 
         holder.itemView.setTag(position);
@@ -83,9 +66,7 @@ public class PicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             public void onClick(View v) {
                 int position = (Integer) v.getTag();
                 ESPhoto esPhoto = mData.get(position);
-                Intent in = new Intent(v.getContext(), PicDetailActivity.class);
-                in.putExtra("picSetId", esPhoto.getId());
-                v.getContext().startActivity(in);
+                ImageDetailActivity.start(v.getContext(), esPhoto.getId());
             }
         });
     }

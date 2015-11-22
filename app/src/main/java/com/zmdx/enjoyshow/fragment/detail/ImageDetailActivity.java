@@ -18,6 +18,7 @@ import com.zmdx.enjoyshow.entity.ESComment;
 import com.zmdx.enjoyshow.entity.ESPhotoSet;
 import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.entity.PraiseInfo;
+import com.zmdx.enjoyshow.fragment.profile.UserProfileActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
@@ -31,6 +32,7 @@ import com.zmdx.enjoyshow.utils.UIUtils;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -106,6 +108,12 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         toolbar.setTitle("图片详情");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void pullData() {
@@ -240,7 +248,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         mPraiseImage = (ImageView) findViewById(R.id.praiseImage);
         mPraiseNumTv = (TextView) findViewById(R.id.praiseNumTv);
         updatePraisedStatus(data);
-        List<PraiseInfo> praises = data.getPraiseList();
+        final List<PraiseInfo> praises = data.getPraiseList();
         Context context = getApplicationContext();
         int headSize = UIUtils.dipToPx(context, 23);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(headSize, headSize);
@@ -250,6 +258,15 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
             for (int i = 0; i < limit; i++) {
                 PraiseInfo pi = praises.get(i);
                 ImageView view = new ImageView(context);
+                view.setTag(pi.getId());//getId()为点赞人的userId
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String userId = (String) v.getTag();
+                        UserProfileActivity.start(ImageDetailActivity.this, userId);
+
+                    }
+                });
                 mPraiseLayout.addView(view, lp);
                 ImageLoaderManager.getImageLoader().displayImage(pi.getHeadPortrait(), view,
                         ImageLoaderOptionsUtils.getHeadImageOptions());
@@ -258,6 +275,13 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
             moreView.setText("...");
             moreView.setGravity(Gravity.CENTER_VERTICAL);
             moreView.setTextColor(Color.parseColor("#30000000"));
+            moreView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AllPraisedActivity.start(ImageDetailActivity.this, praises);
+                }
+            });
+            lp.leftMargin = UIUtils.dipToPx(context, 6);
             mPraiseLayout.addView(moreView, lp);
         }
 

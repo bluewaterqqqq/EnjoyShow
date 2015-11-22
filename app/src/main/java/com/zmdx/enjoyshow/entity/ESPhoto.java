@@ -15,10 +15,10 @@ public class ESPhoto {
     private String comments;
     private String coverUrl;
     private String descs;
-    private String id;
+    private String id; // 即 pictureSetId
     private String orderId;
     private int photoCount;//图集包含的图片个数
-    private int picSetId;
+//    private int picSetId;
     private int praise;//点赞数
     private int rank;//图集热度（在照片墙的 最热 栏使用）
     private int report;//图集被举报次数（超过10次不显示）
@@ -79,13 +79,13 @@ public class ESPhoto {
         this.photoCount = photoCount;
     }
 
-    public int getPicSetId() {
-        return picSetId;
-    }
-
-    public void setPicSetId(int picSetId) {
-        this.picSetId = picSetId;
-    }
+//    public int getPicSetId() {
+//        return picSetId;
+//    }
+//
+//    public void setPicSetId(int picSetId) {
+//        this.picSetId = picSetId;
+//    }
 
     public int getPraise() {
         return praise;
@@ -182,9 +182,10 @@ public class ESPhoto {
             photo.setDescs(obj.optString("descs"));
             photo.setId(obj.optString("id"));
             photo.setOrderId(obj.optString("orderId"));
-            photo.setPicSetId(obj.optInt("pictureSetId"));
+//            photo.setPicSetId(obj.optInt("pictureSetId"));
             photo.setPraise(obj.optInt("praise"));
             photo.setRank(obj.optInt("rank"));
+            photo.setPhotoCount(obj.optInt("photoCount"));
             photo.setReport(obj.optInt("report"));
             photo.setThemeCycleId(obj.optInt("themeCycleId"));
             photo.setTread(obj.optInt("tread"));

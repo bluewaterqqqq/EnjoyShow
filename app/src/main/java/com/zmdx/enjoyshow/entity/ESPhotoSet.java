@@ -63,7 +63,7 @@ public class ESPhotoSet {
         photo.setComments(ESComment.convertByJSON(result.optString("comments")));
         if (ESConfig.DEBUG && (photo.getComments() == null || photo.getComments().size() <= 0)) {
             List<ESComment> list = new ArrayList<ESComment>();
-            int i = 3;
+            int i = 10;
             while (true) {
                 if (i < 0) {
                     break;

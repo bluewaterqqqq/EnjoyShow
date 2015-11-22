@@ -27,6 +27,8 @@
                   android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name=".fragment.detail.AllPraisedActivity"
                   android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity android:name=".fragment.profile.UserProfileActivity"
+                  android:theme="@style/Theme.AppCompat.NoActionBar"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>
