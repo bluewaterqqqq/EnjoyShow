@@ -60,7 +60,7 @@ public class FollowFragment extends Fragment implements IRefreshListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mEntireView == null) {
-            mEntireView = inflater.inflate(R.layout.latest_pic_layout, container, false);
+            mEntireView = inflater.inflate(R.layout.pic_follow_layout, container, false);
             initViews(mEntireView);
             mPics.clear();
             pullData(false);

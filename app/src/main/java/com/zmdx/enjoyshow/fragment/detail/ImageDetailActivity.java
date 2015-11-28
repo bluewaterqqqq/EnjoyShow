@@ -14,9 +14,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
 import com.zmdx.enjoyshow.entity.ESComment;
+import com.zmdx.enjoyshow.entity.ESPhoto;
 import com.zmdx.enjoyshow.entity.ESPhotoSet;
+import com.zmdx.enjoyshow.entity.ESPicInfo;
 import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.entity.PraiseInfo;
+import com.zmdx.enjoyshow.fragment.detail.ui.ESPicSetView;
 import com.zmdx.enjoyshow.fragment.profile.UserProfileActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
@@ -308,6 +311,14 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
 
     private void initPicsView(ESPhotoSet data) {
         mPicSetLayout = (FrameLayout) findViewById(R.id.picSetLayout);
+        ESPicSetView picSetView = new ESPicSetView(this, data.getPics());
+        picSetView.setOnItemClickListener(new ESPicSetView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, ESPicInfo data) {
+                LogHelper.d(TAG, "onItemClicked, data.id=" + data.getId());
+            }
+        });
+        mPicSetLayout.addView(picSetView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
     private void initCommentView(ESPhotoSet data) {

@@ -12,7 +12,9 @@ import com.zmdx.enjoyshow.common.ESConfig;
  */
 public class ESPhotoSet {
 
-    private List<ESPhoto> pics;
+    private List<ESPicInfo> pics;
+
+
     private int commentNum;
     private String coverUrl;
     private String descStr;
@@ -48,6 +50,7 @@ public class ESPhotoSet {
             photo.setOrderId(obj.optString("orderId"));
             photo.setRank(obj.optString("rank"));
             photo.setReport(obj.optInt("report"));
+            photo.setPics(ESPicInfo.convertByJSON(obj.optJSONArray("photoList")));
             photo.setThemeCycledId(obj.optString("themeCycleId"));
             photo.setThread(obj.optInt("tread"));
             photo.setType(obj.optString("type"));
@@ -86,6 +89,19 @@ public class ESPhotoSet {
         return photo;
     }
 
+
+    public List<ESPicInfo> getPics() {
+        return pics;
+    }
+
+    public void setPics(List<ESPicInfo> pics) {
+        this.pics = pics;
+    }
+
+    public void setUserPraised(boolean userPraised) {
+        isUserPraised = userPraised;
+    }
+    
     public boolean isPraiseStatusChanged() {
         return praiseStatusChanged;
     }
@@ -108,14 +124,6 @@ public class ESPhotoSet {
 
     public void setPraiseNum(int praiseNum) {
         this.praiseNum = praiseNum;
-    }
-
-    public List<ESPhoto> getPics() {
-        return pics;
-    }
-
-    public void setPics(List<ESPhoto> pics) {
-        this.pics = pics;
     }
 
     public int getCommentNum() {
