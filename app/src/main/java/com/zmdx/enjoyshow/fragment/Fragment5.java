@@ -1,5 +1,6 @@
 package com.zmdx.enjoyshow.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -26,6 +27,11 @@ public class Fragment5 extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        TextView tv = (TextView) view.findViewById(R.id.text);
+        tv.setText("什么啊");
+        tv.setTextColor(Color.WHITE);
+        tv.setBackgroundColor(Color.BLACK);
+
         super.onViewCreated(view, savedInstanceState);
     }
 

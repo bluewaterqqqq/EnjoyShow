@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="150dp"
+    app:cardCornerRadius="0dp"
+    android:layout_marginBottom="10dp"
+    >
+
+    <ImageView
+        android:id="@+id/show8_bgIv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/show8_titleTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="25dp"
+        android:ellipsize="end"
+        android:shadowColor="#b0000000"
+        android:shadowDx="3"
+        android:shadowDy="3"
+        android:singleLine="true"
+        android:textColor="#ffffff"
+        android:layout_marginLeft="8dp"
+        android:textSize="16dp" />
+
+    <TextView
+        android:id="@+id/show8_durationTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="4dp"
+        android:ellipsize="end"
+        android:shadowColor="#50000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:singleLine="true"
+        android:textColor="#ffffff"
+        android:layout_marginLeft="8dp"
+        android:textSize="12dp" />
+</android.support.v7.widget.CardView>

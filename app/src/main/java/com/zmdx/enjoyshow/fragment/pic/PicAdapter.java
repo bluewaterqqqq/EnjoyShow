@@ -1,8 +1,6 @@
 package com.zmdx.enjoyshow.fragment.pic;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,16 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.entity.ESPhoto;
 import com.zmdx.enjoyshow.fragment.detail.ImageDetailActivity;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
 import com.zmdx.enjoyshow.utils.LogHelper;
-import com.zmdx.enjoyshow.utils.UIUtils;
 
 import java.util.List;
 
@@ -119,7 +113,7 @@ public class PicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return;
         } else if (pos == -1) {//全部为新数据，无需去重，全部添加
             mData.addAll(0, data);
-            LogHelper.d(TAG, "更新"+data.size()+"条");
+            LogHelper.d(TAG, "更新" + data.size() + "条");
         } else if (pos > 0) {//存在重合数据，只将新数据添加进来
             for (int j = pos - 1; j >= 0; j--) {
                 mData.add(0, data.get(j));

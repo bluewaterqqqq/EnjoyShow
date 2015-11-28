@@ -23,16 +23,15 @@ import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
 import com.zmdx.enjoyshow.user.ESUserManager;
+import com.zmdx.enjoyshow.utils.BaseInfoHelper;
 import com.zmdx.enjoyshow.utils.ESDateFormat;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
 import com.zmdx.enjoyshow.utils.LogHelper;
-import com.zmdx.enjoyshow.utils.UIUtils;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,7 +39,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -250,9 +248,9 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         updatePraisedStatus(data);
         final List<PraiseInfo> praises = data.getPraiseList();
         Context context = getApplicationContext();
-        int headSize = UIUtils.dipToPx(context, 23);
+        int headSize = BaseInfoHelper.dip2px(context, 23);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(headSize, headSize);
-        lp.leftMargin = UIUtils.dipToPx(context, 4);
+        lp.leftMargin = BaseInfoHelper.dip2px(context, 4);
         if (praises != null && praises.size() > 0) {
             int limit = Math.min(7, praises.size());
             for (int i = 0; i < limit; i++) {
@@ -281,7 +279,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
                     AllPraisedActivity.start(ImageDetailActivity.this, praises);
                 }
             });
-            lp.leftMargin = UIUtils.dipToPx(context, 6);
+            lp.leftMargin = BaseInfoHelper.dip2px(context, 6);
             mPraiseLayout.addView(moreView, lp);
         }
 

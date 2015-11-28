@@ -37,7 +37,7 @@ public class ImageLoaderOptionsUtils {
                 .showImageForEmptyUri(R.drawable.me_icon_nor)
                 .bitmapConfig(Bitmap.Config.ARGB_8888)
                 .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-                .displayer(new RoundedBitmapDisplayer(UIUtils.dipToPx(ESApplication.getInstance(), 1000)))
+                .displayer(new RoundedBitmapDisplayer(BaseInfoHelper.dip2px(ESApplication.getInstance(), 1000)))
                 .build();
 
         return headerImageOptions;
