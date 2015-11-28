@@ -1,8 +1,5 @@
 package com.zmdx.enjoyshow.fragment.detect;
 
-import com.zmdx.enjoyshow.fragment.pic.LatestPicFragment;
-import com.zmdx.enjoyshow.fragment.pic.MostHotPicFragment;
-
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

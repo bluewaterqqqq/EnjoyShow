@@ -46,7 +46,7 @@ public class ESUserManager {
                 "http://wx.qlogo"
                         + ".cn/mmopen/eZbpr3s49Ws8j2FVkJGV3miad5W1hQPBoEZ549WHNZX0htO7zZlbYMlgKFOal7Ue2RcLy1Eu0151sAvXfdTibK5iawY5NK3YVAP/0");
         user.setUserName("至美");
-        user.setId(1);
+        user.setId(0);
         return user;
     }
 }

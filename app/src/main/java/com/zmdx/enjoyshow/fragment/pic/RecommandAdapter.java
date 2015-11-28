@@ -21,22 +21,22 @@ import java.util.List;
 /**
  * Created by zhangyan on 15/10/26.
  */
-public class PicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RecommandAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final String TAG = "PicAdapter";
+    private static final String TAG = "RecommandAdapter";
 
     private List<ESPhoto> mData;
 
     private LayoutInflater mInflater;
 
-    private DisplayImageOptions mCoverImageOptions, mHeaderImageOptions;
+    private DisplayImageOptions mCoverImageOptions;
+//    private DisplayImageOptions mHeaderImageOptions;
 
-
-    public PicAdapter(Context context, List<ESPhoto> data) {
+    public RecommandAdapter(Context context, List<ESPhoto> data) {
         mData = data;
         mInflater = LayoutInflater.from(context);
         mCoverImageOptions = ImageLoaderOptionsUtils.getCoverImageOptions();
-        mHeaderImageOptions = ImageLoaderOptionsUtils.getHeadImageOptions();
+//        mHeaderImageOptions = ImageLoaderOptionsUtils.getHeadImageOptions();
     }
 
     @Override
@@ -49,9 +49,9 @@ public class PicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         PicViewHolder pHolder = (PicViewHolder) holder;
         ESPhoto item = mData.get(position);
         ImageLoaderManager.getImageLoader().displayImage(item.getCoverUrl(), pHolder.coverView, mCoverImageOptions);
-        ImageLoaderManager.getImageLoader().displayImage(item.getUser().getHeadPortrait(), pHolder.headView, mHeaderImageOptions);
+//        ImageLoaderManager.getImageLoader().displayImage(item.getUser().getHeadPortrait(), pHolder.headView, mHeaderImageOptions);
         pHolder.reportView.setText(item.getPhotoCount() + "");
-        pHolder.userNameView.setText(item.getUser().getUserName());
+//        pHolder.userNameView.setText(item.getUser().getUserName());
 
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -134,7 +134,7 @@ public class PicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             super(v);
             coverView = (ImageView) v.findViewById(R.id.coverImage);
             headView = (ImageView) v.findViewById(R.id.headImage);
-            reportView = (TextView) v.findViewById(R.id.reportCount);
+            reportView = (TextView) v.findViewById(R.id.picNum);
             userNameView = (TextView) v.findViewById(R.id.userText);
         }
     }

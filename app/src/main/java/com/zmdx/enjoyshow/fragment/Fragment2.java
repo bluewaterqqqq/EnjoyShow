@@ -49,22 +49,35 @@ public class Fragment2 extends BaseFragment {
 
     private boolean mPulling = false;
 
+    private View mEntireView;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.tab2_layout, container, false);
+        if (mEntireView == null) {
+            mEntireView = inflater.inflate(R.layout.tab2_layout, container, false);
+            initViews(mEntireView);
+            mData.clear();
+            pullData();
+        }
+        ViewGroup parent = (ViewGroup) mEntireView.getParent();
+        if (parent != null) {
+            parent.removeView(mEntireView);
+        }
+        return mEntireView;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    private void initViews(View view) {
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.show8_recyclerview);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new Show8Adapter(getContext(), mData);
         mRecyclerView.setAdapter(mAdapter);
+    }
 
-        pullData();
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
 

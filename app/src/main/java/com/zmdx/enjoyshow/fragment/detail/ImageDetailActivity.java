@@ -2,7 +2,6 @@ package com.zmdx.enjoyshow.fragment.detail;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.util.List;
 
 import org.json.JSONException;
@@ -191,8 +190,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
     }
 
     private String createPraiseUrl(String action) {
-        String params = "?pictureSetId=" + mPicSetId
-                + "&currentUserId=" + ESUserManager.getInstance().getCurrentUserId();
+        String params = "?pictureSetId=" + mPicSetId;
         return UrlBuilder.getUrl(action, params);
     }
 

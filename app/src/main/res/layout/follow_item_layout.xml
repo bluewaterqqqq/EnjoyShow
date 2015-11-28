@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="3dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:gravity="center_vertical"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/follow_headIcon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="8dp" />
+
+            <TextView
+                android:id="@+id/follow_userName"
+                style="@style/titleStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/follow_headIcon" />
+
+
+            <ImageView
+                android:id="@+id/dateImage"
+                android:layout_width="11dp"
+                android:layout_height="11dp"
+                android:layout_below="@id/follow_userName"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="7dp"
+                android:layout_toRightOf="@id/follow_headIcon"
+                android:background="@drawable/date" />
+
+            <TextView
+                android:id="@+id/follow_date"
+                style="@style/postDateStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/follow_userName"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@id/dateImage" />
+        </RelativeLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="300dp">
+
+            <ImageView
+                android:id="@+id/follow_cover"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/follow_picNum"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="right|top"
+                android:layout_marginRight="6dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/circle_bg"
+                android:gravity="center"
+                android:textColor="#b0ffffff"
+                android:textSize="11dp" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/follow_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:paddingLeft="6dp"
+            android:singleLine="true"
+            android:textColor="#a0000000"
+            android:textSize="12dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/divider_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/follow_commentLayout"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/comment_icon" />
+
+                <TextView
+                    android:id="@+id/follow_commentNum"
+                    style="@style/postDateStyle"
+                    android:layout_marginLeft="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:id="@+id/follow_praiseLayout"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/follow_praisedIcon"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/llike_icon" />
+
+                <TextView
+                    android:id="@+id/follow_praiseNum"
+                    style="@style/postDateStyle"
+                    android:layout_marginLeft="3dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

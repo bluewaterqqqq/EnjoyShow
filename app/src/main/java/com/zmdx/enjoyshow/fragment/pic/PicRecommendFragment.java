@@ -1,24 +1,4 @@
-package com.zmdx.enjoyshow.fragment.detect;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.zmdx.enjoyshow.R;
-import com.zmdx.enjoyshow.entity.ESPhoto;
-import com.zmdx.enjoyshow.fragment.pic.RecommandAdapter;
-import com.zmdx.enjoyshow.network.ActionConstants;
-import com.zmdx.enjoyshow.network.RequestQueueManager;
-import com.zmdx.enjoyshow.network.UrlBuilder;
-import com.zmdx.enjoyshow.user.ESUserManager;
-import com.zmdx.enjoyshow.utils.LogHelper;
+package com.zmdx.enjoyshow.fragment.pic;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,18 +10,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-/**
- * Created by zhangyan on 15/11/15.
- */
-public class DetectNewestFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.zmdx.enjoyshow.R;
+import com.zmdx.enjoyshow.entity.ESPhoto;
+import com.zmdx.enjoyshow.network.ActionConstants;
+import com.zmdx.enjoyshow.network.RequestQueueManager;
+import com.zmdx.enjoyshow.network.UrlBuilder;
+import com.zmdx.enjoyshow.utils.LogHelper;
 
-    private static final String TAG = "DetectNewestFragment";
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by zhangyan on 15/10/26.
+ */
+public class PicRecommendFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+
+    private static final String TAG = "PicRecommendFragment";
 
     private static final int LIMIT = 20;
-
-    private static final int PIC_WIDTH = 280;
-
-    private SwipeRefreshLayout mRefreshView;
 
     private RecyclerView mRecyclerView;
 
@@ -64,7 +58,7 @@ public class DetectNewestFragment extends Fragment implements SwipeRefreshLayout
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mEntireView == null) {
-            mEntireView = inflater.inflate(R.layout.detect_newest_item_layout, container, false);
+            mEntireView = inflater.inflate(R.layout.latest_pic_layout, container, false);
             initViews(mEntireView);
             mPics.clear();
             pullData(false);
@@ -78,16 +72,23 @@ public class DetectNewestFragment extends Fragment implements SwipeRefreshLayout
 
     private void initViews(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        mRefreshView = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new GridLayoutManager(getContext(), 3);
-
+//        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+//
+//            @Override
+//            public int getSpanSize(int position) {
+//                if (position <= 3) {
+//                    return 3;
+//                } else {
+//                    return 2;
+//                }
+//            }
+//        });
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new RecommandAdapter(getContext(), mPics);
         mRecyclerView.setAdapter(mAdapter);
-
-        mRefreshView.setOnRefreshListener(this);
     }
 
     @Override
@@ -120,35 +121,34 @@ public class DetectNewestFragment extends Fragment implements SwipeRefreshLayout
         }
     }
 
-    private void pullData(final boolean older) {
+    private void pullData(final boolean order) {
         if (mPulling) {
             return;
         }
         mPulling = true;
-        if (older) {
+        if (order) {
             LogHelper.d(TAG, "开始增量拉取");
         } else {
             LogHelper.d(TAG, "开始下拉刷新");
         }
-        final String url = createUrl(older);
+        final String url = createUrl(order);
         LogHelper.d(TAG, "url:" + url);
         final RequestQueue requestQueue = RequestQueueManager.getRequestQueue();
         JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 mPulling = false;
-                if (mRefreshView.isRefreshing()) {
-                    mRefreshView.setRefreshing(false);
-                }
                 LogHelper.d(TAG, "response:" + response);
                 List<ESPhoto> data = parseResponse2Data(response);
                 if (data != null && data.size() > 0) {
-                    if (older) {
+                    if (order) {
                         mAdapter.appendData(data);
                         // 更新lastId
                         mLastId = data.get(data.size() - 1).getOrderId();
                     } else {
-                        mAdapter.insertDataAtHeader(data);
+                        mPics.clear();
+                        mPics.addAll(data);
+                        mAdapter.notifyDataSetChanged();
                     }
 
                 }
@@ -157,9 +157,6 @@ public class DetectNewestFragment extends Fragment implements SwipeRefreshLayout
             @Override
             public void onErrorResponse(VolleyError error) {
                 mPulling = false;
-                if (mRefreshView.isRefreshing()) {
-                    mRefreshView.setRefreshing(false);
-                }
                 LogHelper.e(TAG, "onErrorResponse:" + error.getMessage());
             }
         });
@@ -191,12 +188,10 @@ public class DetectNewestFragment extends Fragment implements SwipeRefreshLayout
 
     private String createUrl(boolean order) {
         String lastId = order ? mLastId : "0";
-        String params = "?currentUserId=" + ESUserManager.getInstance().getCurrentUserId()
+        String params = "?category=1"
                 + "&lastId=" + lastId
-                + "&limit=" + LIMIT
-                + "&w=" + PIC_WIDTH
-                + "&pf=Android";
-        return UrlBuilder.getUrl(ActionConstants.ACTION_DETECT_LATEST, params);
+                + "&limit=" + LIMIT;
+        return UrlBuilder.getUrl(ActionConstants.ACTION_QUERY_PHOTO_WALL, params);
     }
 
     @Override

@@ -17,9 +17,9 @@ public class PicFragmentPagerAdpater extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (position == 0) {
-            return new LatestPicFragment();
+            return new PicRecommendFragment();
         } else if (position == 1) {
-            return new MostHotPicFragment();
+            return new FollowFragment();
         }
         return null;
     }
@@ -32,9 +32,9 @@ public class PicFragmentPagerAdpater extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         if (position == 0) {
-            return "最新";
+            return "推荐";
         } else if (position == 1) {
-            return "最热";
+            return "关注";
         }
         return super.getPageTitle(position);
     }

@@ -1,10 +1,10 @@
 package com.zmdx.enjoyshow.fragment.pic;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +19,6 @@ import com.zmdx.enjoyshow.entity.ESPhoto;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
-import com.zmdx.enjoyshow.user.ESUserManager;
 import com.zmdx.enjoyshow.utils.LogHelper;
 
 import org.json.JSONArray;
@@ -30,27 +29,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by zhangyan on 15/10/26.
+ * Created by zhangyan on 15/11/28.
  */
-public abstract class BasePicFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class FollowFragment extends Fragment implements IRefreshListener {
 
-    private static final String TAG = BasePicFragment.class.getSimpleName();
+    private static final String TAG = "FollowFragment";
 
     private static final int LIMIT = 20;
 
-    private static final int PIC_WIDTH = 280;
-
-    private SwipeRefreshLayout mRefreshView;
-
     private RecyclerView mRecyclerView;
 
-    private GridLayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
 
-    private PicAdapter mAdapter;
+    private FollowAdapter mAdapter;
 
     private List<ESPhoto> mPics = new ArrayList<ESPhoto>();
 
     private boolean mPulling = false;
+
+    private Context mContext;
 
     /**
      * 增量更新时，url中的key为lastId,如果下拉刷新数据，传0，如果增量更新，传数据中的最后一条orderId的值
@@ -77,31 +74,22 @@ public abstract class BasePicFragment extends Fragment implements SwipeRefreshLa
 
     private void initViews(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        mRefreshView = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(getContext(), 6);
-        mLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-
-            @Override
-            public int getSpanSize(int position) {
-                if (position <= 3) {
-                    return 3;
-                } else {
-                    return 2;
-                }
-            }
-        });
+        mLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-        mAdapter = new PicAdapter(getContext(), mPics);
+        mAdapter = new FollowAdapter(getContext(), mPics);
         mRecyclerView.setAdapter(mAdapter);
-
-        mRefreshView.setOnRefreshListener(this);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mContext = getActivity();
     }
 
     @Override
@@ -114,7 +102,7 @@ public abstract class BasePicFragment extends Fragment implements SwipeRefreshLa
                 int totalItemCount = mLayoutManager.getItemCount();
                 //lastVisibleItem >= totalItemCount - 4 表示剩下4个item自动加载
                 // dy>0 表示向下滑动
-                if (lastVisibleItem >= totalItemCount - 6 && dy > 0) {
+                if (lastVisibleItem >= totalItemCount - 2 && dy > 0) {
                     pullData(true);
                 }
             }
@@ -146,9 +134,6 @@ public abstract class BasePicFragment extends Fragment implements SwipeRefreshLa
             @Override
             public void onResponse(JSONObject response) {
                 mPulling = false;
-                if (mRefreshView.isRefreshing()) {
-                    mRefreshView.setRefreshing(false);
-                }
                 LogHelper.d(TAG, "response:" + response);
                 List<ESPhoto> data = parseResponse2Data(response);
                 if (data != null && data.size() > 0) {
@@ -157,7 +142,9 @@ public abstract class BasePicFragment extends Fragment implements SwipeRefreshLa
                         // 更新lastId
                         mLastId = data.get(data.size() - 1).getOrderId();
                     } else {
-                        mAdapter.insertDataAtHeader(data);
+                        mPics.clear();
+                        mPics.addAll(data);
+                        mAdapter.notifyDataSetChanged();
                     }
 
                 }
@@ -166,9 +153,6 @@ public abstract class BasePicFragment extends Fragment implements SwipeRefreshLa
             @Override
             public void onErrorResponse(VolleyError error) {
                 mPulling = false;
-                if (mRefreshView.isRefreshing()) {
-                    mRefreshView.setRefreshing(false);
-                }
                 LogHelper.e(TAG, "onErrorResponse:" + error.getMessage());
             }
         });
@@ -200,11 +184,9 @@ public abstract class BasePicFragment extends Fragment implements SwipeRefreshLa
 
     private String createUrl(boolean order) {
         String lastId = order ? mLastId : "0";
-        String params = "?category=" + getCategory()
-                + "&currentUserId=" + ESUserManager.getInstance().getCurrentUserId()
+        String params = "?category=0"
                 + "&lastId=" + lastId
-                + "&limit=" + LIMIT
-                + "&w=" + PIC_WIDTH;
+                + "&limit=" + LIMIT;
         return UrlBuilder.getUrl(ActionConstants.ACTION_QUERY_PHOTO_WALL, params);
     }
 
@@ -212,6 +194,4 @@ public abstract class BasePicFragment extends Fragment implements SwipeRefreshLa
     public void onRefresh() {
         pullData(false);
     }
-
-    protected abstract String getCategory();
 }

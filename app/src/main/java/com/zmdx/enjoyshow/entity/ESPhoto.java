@@ -30,6 +30,15 @@ public class ESPhoto {
     private String userId;
     private int views;
     private int votes;
+    private boolean isUserPraised;
+
+    public boolean isUserPraised() {
+        return isUserPraised;
+    }
+
+    public void setUserPraised(boolean userPraised) {
+        isUserPraised = userPraised;
+    }
 
     public String getComments() {
         return comments;
@@ -195,8 +204,7 @@ public class ESPhoto {
             photo.setUserId(obj.optString("userid"));
             photo.setViews(obj.optInt("view"));
             photo.setVotes(obj.optInt("votes"));
-
-
+            photo.setUserPraised(obj.optInt("isUserPraised") == 1);
         return photo;
     }
 
