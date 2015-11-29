@@ -25,4 +25,6 @@ public class ActionConstants {
 
     public static final String ACTION_QUERY_THEME = CONTEXT + "photo_queryThemes.action";
 
+    public static final String ACTION_VOTE = CONTEXT + "photo_vote.action";
+
 }

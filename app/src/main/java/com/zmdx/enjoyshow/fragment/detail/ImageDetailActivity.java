@@ -78,6 +78,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
     private Button mSendCommentBtn;
     private int mCommentTargetId = -1;//回复评论,对方的userId
     private CommentAdapter mCommentAdapter;
+    private TextView mVoteNumTv;
 
     public static void start(Context context, String pictureSetId) {
         Intent in = new Intent(context, ImageDetailActivity.class);
@@ -152,6 +153,76 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         initUserInfoView(data);
         initPraiseListView(data);
         initCommentView(data);
+        initVote(data);
+    }
+
+    private void initVote(final ESPhotoSet data) {
+        View voteView = findViewById(R.id.image_detail_vote);
+        View voteLayout = findViewById(R.id.voteNumLayout);
+        String voteType = data.getType();
+        if ("0".equals(voteType)) {
+            // 0是个人, 隐藏投票入口
+            voteView.setVisibility(View.GONE);
+            voteLayout.setVisibility(View.GONE);
+        } else if ("1".equals(voteType)) {
+            // 1是选秀, 显示投票入口
+            mVoteNumTv = (TextView) findViewById(R.id.voteNumTv);
+            mVoteNumTv.setText(data.getVotes() + "");
+            voteView.setVisibility(View.VISIBLE);
+            voteLayout.setVisibility(View.VISIBLE);
+            voteView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handleVoteClickEvent(v, data);
+                }
+            });
+            voteLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    handleVoteClickEvent(v, data);
+                }
+            });
+        }
+
+    }
+
+    private void handleVoteClickEvent(final View v, final ESPhotoSet data) {
+        v.setEnabled(false);
+        final String url = createVoteUrl();
+        JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                LogHelper.d(TAG, "赞状态同步成功");
+                int state = response.optInt("state", -1);
+                if (state == 0) {
+                    JSONObject result = response.optJSONObject("result");
+                    int status = result.optInt("state", -1);
+                    if (status == 0) {
+                        // 投票成功
+                        int leftVotes = result.optInt("surplusVotes");
+                        LogHelper.d(TAG, "本主题:" + data.getId() + "还能投" + leftVotes + "票");
+                    } else if (status == 1) {
+                        Toast.makeText(ImageDetailActivity.this, "投票失败,票数已经投完", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(ImageDetailActivity.this, "投票失败,服务器异常", Toast.LENGTH_SHORT).show();
+                }
+                v.setEnabled(true);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                LogHelper.d(TAG, "赞状态同步失败");
+                Toast.makeText(ImageDetailActivity.this, "投票失败", Toast.LENGTH_SHORT).show();
+                v.setEnabled(true);
+            }
+        });
+        RequestQueueManager.getRequestQueue().add(request);
+    }
+
+    private String createVoteUrl() {
+        String params = "?pictureSetId=" + mPicSetId;
+        return UrlBuilder.getUrl(ActionConstants.ACTION_VOTE, params);
     }
 
     private ESPhotoSet parseResponse2Data(JSONObject response) {
@@ -291,9 +362,6 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
                 clickedPraisedImg();
             }
         });
-
-        // 点击赞列表跳转到所有赞的列表页
-        mPraiseLayout.setOnClickListener(this);
     }
 
     private void initUserInfoView(ESPhotoSet data) {
