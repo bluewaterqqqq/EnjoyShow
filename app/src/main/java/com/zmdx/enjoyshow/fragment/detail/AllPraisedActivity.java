@@ -4,9 +4,12 @@ import java.util.List;
 
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
-import com.zmdx.enjoyshow.entity.PraiseInfo;
+import com.zmdx.enjoyshow.entity.ESPhoto;
+import com.zmdx.enjoyshow.entity.ESUser;
+import com.zmdx.enjoyshow.fragment.adapter.UserListAdapter;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
+import com.zmdx.enjoyshow.utils.LogHelper;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,15 +28,13 @@ import android.widget.TextView;
  */
 public class AllPraisedActivity extends BaseAppCompatActivity {
 
-    private static List<PraiseInfo> sData;
+    private static List<ESUser> sData;
 
     private RecyclerView mRecyclerView;
 
-    private AllPraisedAdapter mAdapter;
+    private UserListAdapter mAdapter;
 
-    private List<PraiseInfo> mData;
-
-    public static void start(Context context, List<PraiseInfo> praises) {
+    public static void start(Context context, List<ESUser> praises) {
         sData = praises;
         Intent in = new Intent(context, AllPraisedActivity.class);
         context.startActivity(in);
@@ -48,7 +49,7 @@ public class AllPraisedActivity extends BaseAppCompatActivity {
         mRecyclerView = (RecyclerView) findViewById(R.id.allPraisedRecyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setHasFixedSize(true);
-        mAdapter = new AllPraisedAdapter(this, sData);
+        mAdapter = new UserListAdapter(this, sData);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -67,10 +68,10 @@ public class AllPraisedActivity extends BaseAppCompatActivity {
 
     public static class PraiseHolder extends RecyclerView.ViewHolder {
 
-        private ImageView headerIv;
-        private TextView userNameTv;
-        private TextView ageTv;
-        private View genderView;
+        public ImageView headerIv;
+        public TextView userNameTv;
+        public TextView ageTv;
+        public View genderView;
 
         public PraiseHolder(View itemView) {
             super(itemView);
@@ -78,50 +79,6 @@ public class AllPraisedActivity extends BaseAppCompatActivity {
             userNameTv = (TextView) itemView.findViewById(R.id.titleTv);
             ageTv = (TextView) itemView.findViewById(R.id.ageTv);
             genderView = itemView.findViewById(R.id.genderView);
-
-        }
-    }
-
-    private class AllPraisedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-        private LayoutInflater mInflater;
-
-        private List<PraiseInfo> mData;
-
-        public AllPraisedAdapter(Context context, List<PraiseInfo> data) {
-            mInflater = LayoutInflater.from(context);
-            mData = data;
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            PraiseHolder pHolder = new PraiseHolder(mInflater.inflate(R.layout.praise_item, parent, false));
-            return pHolder;
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            PraiseHolder pHolder = (PraiseHolder) holder;
-            PraiseInfo pi = mData.get(position);
-            pHolder.userNameTv.setText(pi.getUsername());
-            pHolder.ageTv.setText(pi.getAge());
-            int gender = Integer.valueOf(pi.getGender());
-            if (gender == 0) {
-                pHolder.genderView.setVisibility(View.GONE);
-            } else if (gender == 1) {
-                //男
-                pHolder.genderView.setBackgroundResource(R.drawable.male_icon);
-            } else if (gender == 2) {
-                pHolder.genderView.setBackgroundResource(R.drawable.female_icon);
-            }
-
-            ImageLoaderManager.getImageLoader().displayImage(pi.getHeadPortrait(), pHolder.headerIv,
-                    ImageLoaderOptionsUtils.getHeadImageOptions());
-        }
-
-        @Override
-        public int getItemCount() {
-            return mData.size();
         }
     }
 }

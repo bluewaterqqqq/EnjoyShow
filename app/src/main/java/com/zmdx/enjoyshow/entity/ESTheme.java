@@ -4,28 +4,63 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by baidu on 15/11/27.
+ * Created by zhangyan on 15/11/27.
  */
-public class ESTheme {
+public class ESTheme implements Serializable {
 
     String mBgUrl;
+    /**
+     * 主题介绍
+     */
     String mDesc;
+    /**
+     * @deprecated
+     */
     String mDetailImageUrl;
 
     long mEndTime;
     String mId;
+
+    @Deprecated
     String mInsideDetailImageUrl;
     boolean needValidate;
     long mStartTime;
     String mStatus;
     String mTag;
     String mTitle;
+    String awardSetting;
+    String rule;
+    String notice;
 
+    public String getAwardSetting() {
+        return awardSetting;
+    }
+
+    public void setAwardSetting(String awardSetting) {
+        this.awardSetting = awardSetting;
+    }
+
+    public String getRule() {
+        return rule;
+    }
+
+    public void setRule(String rule) {
+        this.rule = rule;
+    }
+
+    public String getNotice() {
+        return notice;
+    }
+
+    public void setNotice(String notice) {
+        this.notice = notice;
+    }
 
     public void setmEndTime(long mEndTime) {
         this.mEndTime = mEndTime;
@@ -67,10 +102,12 @@ public class ESTheme {
         this.mDesc = mDesc;
     }
 
+    @Deprecated
     public String getmDetailImageUrl() {
         return mDetailImageUrl;
     }
 
+    @Deprecated
     public void setmDetailImageUrl(String mDetailImageUrl) {
         this.mDetailImageUrl = mDetailImageUrl;
     }
@@ -83,10 +120,12 @@ public class ESTheme {
         this.mId = mId;
     }
 
+    @Deprecated
     public String getmInsideDetailImageUrl() {
         return mInsideDetailImageUrl;
     }
 
+    @Deprecated
     public void setmInsideDetailImageUrl(String mInsideDetailImageUrl) {
         this.mInsideDetailImageUrl = mInsideDetailImageUrl;
     }
@@ -131,13 +170,16 @@ public class ESTheme {
                 theme.setmDesc(obj.optString("descs"));
                 theme.setmDetailImageUrl(obj.optString("detailImageUrl"));
                 theme.setmEndTime(obj.optLong("endtime"));
-                theme.setmId("id");
+                theme.setmId(obj.optString("id"));
                 theme.setmInsideDetailImageUrl("insideDetailImageUrl");
                 theme.setNeedValidate(obj.optString("isNeedValidate").equals("0")); // 0是需要,1是不需要
                 theme.setmStartTime(obj.optLong("starttime"));
-                theme.setmStatus(obj.optString("status")); // 0结束,1机型中,2开始
+                theme.setmStatus(obj.optString("status")); // 0结束,1进行中,2开始
                 theme.setmTag(obj.optString("tag"));
                 theme.setmTitle(obj.optString("themeTitle"));
+                theme.setAwardSetting(obj.optString("awardSetting"));
+                theme.setRule(obj.optString("role"));
+                theme.setNotice(obj.optString("notice"));
                 list.add(theme);
             }
         } catch (JSONException e) {

@@ -29,7 +29,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 /**
- * Created by baidu on 15/11/28.
+ * Created by zhangyan on 15/11/28.
  */
 public class FollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
     private static final String TAG = "FollowAdapter";
@@ -39,6 +39,7 @@ public class FollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private LayoutInflater mInflater;
 
     private DisplayImageOptions mCoverImageOptions;
+
     private DisplayImageOptions mHeaderImageOptions;
 
     private Context mContext;
@@ -69,7 +70,6 @@ public class FollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         pHolder.desc.setText(item.getDescs());
         pHolder.praiseCount.setText(item.getPraise() + "");
         pHolder.praiseIcon.setBackgroundResource(item.isUserPraised() ? R.drawable.liked_icon : R.drawable.llike_icon);
-
 
         pHolder.coverView.setOnClickListener(this);
         pHolder.coverView.setTag(item.getId());

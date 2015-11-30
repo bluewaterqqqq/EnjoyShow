@@ -97,10 +97,10 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/follow_commentLayout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:id="@+id/follow_commentLayout"
                 android:gravity="center">
 
                 <ImageView
@@ -111,17 +111,17 @@
                 <TextView
                     android:id="@+id/follow_commentNum"
                     style="@style/postDateStyle"
-                    android:layout_marginLeft="3dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/follow_praiseLayout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:id="@+id/follow_praiseLayout"
-                android:layout_weight="1">
+                android:layout_weight="1"
+                android:gravity="center">
 
                 <ImageView
                     android:id="@+id/follow_praisedIcon"
@@ -132,9 +132,9 @@
                 <TextView
                     android:id="@+id/follow_praiseNum"
                     style="@style/postDateStyle"
-                    android:layout_marginLeft="3dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp" />
             </LinearLayout>
 
 

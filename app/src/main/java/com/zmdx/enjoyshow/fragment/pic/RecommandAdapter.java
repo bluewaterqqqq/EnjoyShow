@@ -126,16 +126,16 @@ public class RecommandAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public static class PicViewHolder extends RecyclerView.ViewHolder {
         public ImageView coverView;
-        public ImageView headView;
+//        public ImageView headView;
         public TextView reportView;
-        public TextView userNameView;
+//        public TextView userNameView;
 
         public PicViewHolder(View v) {
             super(v);
             coverView = (ImageView) v.findViewById(R.id.coverImage);
-            headView = (ImageView) v.findViewById(R.id.headImage);
+//            headView = (ImageView) v.findViewById(R.id.headImage);
             reportView = (TextView) v.findViewById(R.id.picNum);
-            userNameView = (TextView) v.findViewById(R.id.userText);
+//            userNameView = (TextView) v.findViewById(R.id.userText);
         }
     }
 }

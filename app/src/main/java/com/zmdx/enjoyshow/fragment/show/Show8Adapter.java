@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zmdx.enjoyshow.R;
+import com.zmdx.enjoyshow.entity.ESPhoto;
 import com.zmdx.enjoyshow.entity.ESTheme;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * Created by baidu on 15/11/27.
  */
-public class Show8Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class Show8Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
     private List<ESTheme> mData;
 
@@ -47,11 +48,19 @@ public class Show8Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         sHolder.durationTv.setText(mFormat.format(new Date(theme.getmStartTime())) + " -- " + mFormat.format(new Date(theme.getmEndTime())));
         ImageLoaderManager.getImageLoader().displayImage(theme.getmBgUrl(), sHolder.bgIv,
                 ImageLoaderOptionsUtils.getCoverImageOptions());
+        sHolder.itemView.setTag(theme);
+        sHolder.itemView.setOnClickListener(this);
     }
 
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    @Override
+    public void onClick(View v) {
+        ESTheme data = (ESTheme) v.getTag();
+        Show8DetailActivity.start(v.getContext(), data);
     }
 
     public static class Show8Holder extends RecyclerView.ViewHolder {

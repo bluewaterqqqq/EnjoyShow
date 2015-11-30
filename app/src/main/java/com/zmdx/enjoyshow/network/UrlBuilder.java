@@ -84,8 +84,6 @@ public class UrlBuilder {
         String a = "AtQym[didR%s`currentUserIde%s`pfF%s`tI%s`appVersionc%s]AtQym}/~&^;'";
         String str = String.format(a, did, userId, android, currentTime, vCode);
         String sha1Str = HashUtils.getStringSHA1(str);
-        LogHelper.d(TAG, "format url:" + str);
-        LogHelper.d(TAG, "format url sha1:" + sha1Str);
         return sha1Str;
     }
 

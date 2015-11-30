@@ -36,7 +36,7 @@ public class ESPhotoSet {
     private int votes;
     private List<ESComment> comments;
     private int praiseNum;
-    private List<PraiseInfo> praiseList;
+    private List<ESUser> praiseList;
 
     public static ESPhotoSet convertByJSON(JSONObject result) {
         ESPhotoSet photo = new ESPhotoSet();
@@ -61,7 +61,7 @@ public class ESPhotoSet {
             photo.setVotes(obj.optInt("votes"));
             photo.setCommentNum(obj.optInt("comments"));
             photo.setPraiseNum(obj.optInt("praise"));
-            photo.setPraiseList(PraiseInfo.convertByJSON(obj.optJSONArray("praiseUserList")));
+            photo.setPraiseList(ESUser.convertByJSONArray(obj.optJSONArray("praiseUserList")));
         }
         photo.setComments(ESComment.convertByJSON(result.optString("comments")));
         if (ESConfig.DEBUG && (photo.getComments() == null || photo.getComments().size() <= 0)) {
@@ -110,11 +110,11 @@ public class ESPhotoSet {
         this.praiseStatusChanged = praiseStatusChanged;
     }
 
-    public List<PraiseInfo> getPraiseList() {
+    public List<ESUser> getPraiseList() {
         return praiseList;
     }
 
-    public void setPraiseList(List<PraiseInfo> praiseList) {
+    public void setPraiseList(List<ESUser> praiseList) {
         this.praiseList = praiseList;
     }
 

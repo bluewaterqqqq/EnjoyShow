@@ -1,13 +1,14 @@
 package com.zmdx.enjoyshow.fragment.pic.ui;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 /**
  * Created by zhangyan on 15/10/27.
  */
-public class SquareFramelayout extends FrameLayout {
+public class SquareFramelayout extends CardView {
     public SquareFramelayout(Context context) {
         super(context);
     }

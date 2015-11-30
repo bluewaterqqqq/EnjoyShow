@@ -13,6 +13,7 @@ public class ActionConstants {
     public static final String ACTION_VIEW_PICSET = CONTEXT + "photo_viewPictureSet.action";
 
     public static final String ACTION_DETECT_LATEST = CONTEXT + "photo_newestPhotoSet.action";
+
     public static final String ACTION_DETECT_LOOKUP = CONTEXT + "photo_browsePhotoSet.action";
 
     public static final String ACTION_IMAGE_DETAIL = CONTEXT + "photo_viewPictureSet.action";
@@ -26,5 +27,13 @@ public class ActionConstants {
     public static final String ACTION_QUERY_THEME = CONTEXT + "photo_queryThemes.action";
 
     public static final String ACTION_VOTE = CONTEXT + "photo_vote.action";
+
+    public static final String ACTION_THEME_DETAIL = CONTEXT + "photo_loadCycleInfo.action";
+
+    public static final String ACTION_THEME_HOSTEST = CONTEXT + "photo_queryCycleRanking.action";
+
+    public static final String ACTION_THEME_NEWEST = CONTEXT + "photo_queryDraftPhotosWall.action";
+
+    public static final String ACTION_THEME_USERRANK = CONTEXT + "photo_queryUserCycleRanking.action";
 
 }

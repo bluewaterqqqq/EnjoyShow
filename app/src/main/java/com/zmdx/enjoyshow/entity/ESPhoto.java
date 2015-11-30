@@ -4,13 +4,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by zhangyan on 15/10/27.
  */
-public class ESPhoto {
+public class ESPhoto implements Serializable {
 
     private String comments;
     private String coverUrl;

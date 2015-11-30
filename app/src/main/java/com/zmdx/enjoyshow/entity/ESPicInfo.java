@@ -3,11 +3,11 @@ package com.zmdx.enjoyshow.entity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 图片详情页顶部图集
  * Created by zhangyan on 15/11/29.
  */
 public class ESPicInfo {

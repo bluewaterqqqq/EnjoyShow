@@ -22,4 +22,5 @@ public abstract class BaseFragment extends Fragment {
     protected abstract String getTitle();
 
     protected abstract Toolbar getToolbar();
+
 }

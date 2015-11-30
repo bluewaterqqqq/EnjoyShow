@@ -1,21 +1,44 @@
 package com.zmdx.enjoyshow.entity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zhangyan on 15/10/27.
  */
-public class ESUser {
+public class ESUser implements Serializable {
     private String age = "";
     private String gender;//性别 0未知 1男 2女
     private String headPortrait;//头像
     private int id;
+    private String loginName;
+    private String orderId;
     private int orgId;
     private int praise;
     private int report;
     private String userName = "";
     private int votes;
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+
+    public String getLoginName() {
+        return loginName;
+    }
+
+    public void setLoginName(String loginName) {
+        this.loginName = loginName;
+    }
 
     public String getAge() {
         return age;
@@ -102,9 +125,27 @@ public class ESUser {
             esUser.setReport(obj.optInt("report"));
             esUser.setUserName(obj.optString("username"));
             esUser.setVotes(obj.optInt("votes"));
+            esUser.setLoginName(obj.optString("loginName"));
+            esUser.setOrderId(obj.optString("orderId"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return esUser;
+    }
+
+    public static List<ESUser> convertByJSONArray(JSONArray array) {
+        List<ESUser> result = new ArrayList<ESUser>();
+        if (array != null) {
+            int length = array.length();
+            for (int i = 0; i < length; i++) {
+                try {
+                    ESUser user = ESUser.convertByJSON(array.getString(i));
+                    result.add(user);
+                } catch (JSONException e) {
+                    // ignore
+                }
+            }
+        }
+        return result;
     }
 }

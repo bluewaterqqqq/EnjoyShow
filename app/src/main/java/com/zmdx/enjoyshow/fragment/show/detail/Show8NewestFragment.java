@@ -1,6 +1,6 @@
-package com.zmdx.enjoyshow.fragment.pic;
+package com.zmdx.enjoyshow.fragment.show.detail;
 
-import android.content.Context;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.entity.ESPhoto;
+import com.zmdx.enjoyshow.fragment.pic.RecommandAdapter;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
@@ -30,11 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by zhangyan on 15/11/28.
+ * Created by zhangyan on 15/11/30.
  */
-public class FollowFragment extends Fragment implements IRefreshListener {
-
-    private static final String TAG = "FollowFragment";
+public class Show8NewestFragment extends Fragment {
+    private static final String TAG = "Show8NewestFragment";
 
     private static final int LIMIT = 20;
 
@@ -42,29 +42,38 @@ public class FollowFragment extends Fragment implements IRefreshListener {
 
     private LinearLayoutManager mLayoutManager;
 
-    private FollowAdapter mAdapter;
-
-    private List<ESPhoto> mPics = new ArrayList<ESPhoto>();
-
-    private boolean mPulling = false;
-
-    private Context mContext;
-
-    /**
-     * 增量更新时，url中的key为lastId,如果下拉刷新数据，传0，如果增量更新，传数据中的最后一条orderId的值
-     */
-    private String mLastId = "0";
+    private RecommandAdapter mAdapter;
 
     private View mEntireView;
 
+    private List<ESPhoto> mData;
+
+    private boolean mPulling = false;
+
+    private String mLastId = "0";
+
+    private int mThemeId;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        mData = (ArrayList<ESPhoto>) bundle.getSerializable("data");
+        LogHelper.d(TAG, "data size:" + mData.size());
+        if (mData != null) {
+            if (mData.size() > 0) {
+                mLastId = mData.get(mData.size() - 1).getOrderId();
+                mThemeId = mData.get(0).getThemeCycleId();
+            }
+        }
+    }
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mEntireView == null) {
             mEntireView = inflater.inflate(R.layout.pic_follow_layout, container, false);
             initViews(mEntireView);
-            mPics.clear();
-            pullData(false);
         }
         ViewGroup parent = (ViewGroup) mEntireView.getParent();
         if (parent != null) {
@@ -76,21 +85,10 @@ public class FollowFragment extends Fragment implements IRefreshListener {
     private void initViews(View view) {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(mContext);
+        mLayoutManager = new GridLayoutManager(getActivity(), 3);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new FollowAdapter(getContext(), mPics);
+        mAdapter = new RecommandAdapter(getContext(), mData);
         mRecyclerView.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mContext = getActivity();
     }
 
     @Override
@@ -103,8 +101,8 @@ public class FollowFragment extends Fragment implements IRefreshListener {
                 int totalItemCount = mLayoutManager.getItemCount();
                 //lastVisibleItem >= totalItemCount - 2 表示剩下2个item自动加载
                 // dy>0 表示向下滑动
-                if (lastVisibleItem >= totalItemCount - 2 && dy > 0) {
-                    pullData(true);
+                if (lastVisibleItem >= totalItemCount - 6 && dy > 0) {
+                    pullData();
                 }
             }
         });
@@ -118,17 +116,13 @@ public class FollowFragment extends Fragment implements IRefreshListener {
         }
     }
 
-    private void pullData(final boolean order) {
+    private void pullData() {
         if (mPulling) {
             return;
         }
         mPulling = true;
-        if (order) {
-            LogHelper.d(TAG, "开始增量拉取");
-        } else {
-            LogHelper.d(TAG, "开始下拉刷新");
-        }
-        final String url = createUrl(order);
+        LogHelper.d(TAG, "开始增量拉取");
+        final String url = createUrl();
         LogHelper.d(TAG, "url:" + url);
         final RequestQueue requestQueue = RequestQueueManager.getRequestQueue();
         JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
@@ -138,16 +132,9 @@ public class FollowFragment extends Fragment implements IRefreshListener {
                 LogHelper.d(TAG, "response:" + response);
                 List<ESPhoto> data = parseResponse2Data(response);
                 if (data != null && data.size() > 0) {
-                    if (order) {
-                        mAdapter.appendData(data);
-                        // 更新lastId
-                        mLastId = data.get(data.size() - 1).getOrderId();
-                    } else {
-                        mPics.clear();
-                        mPics.addAll(data);
-                        mAdapter.notifyDataSetChanged();
-                    }
-
+                    mAdapter.appendData(data);
+                    // 更新lastId
+                    mLastId = data.get(data.size() - 1).getOrderId();
                 }
             }
         }, new Response.ErrorListener() {
@@ -178,21 +165,13 @@ public class FollowFragment extends Fragment implements IRefreshListener {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
         return list;
     }
 
-    private String createUrl(boolean order) {
-        String lastId = order ? mLastId : "0";
-        String params = "?category=0"
-                + "&lastId=" + lastId
-                + "&limit=" + LIMIT;
-        return UrlBuilder.getUrl(ActionConstants.ACTION_QUERY_PHOTO_WALL, params);
-    }
-
-    @Override
-    public void onRefresh() {
-        pullData(false);
+    private String createUrl() {
+        String params = "?themeId=" + mThemeId +
+                "&limit=21&lastId=" + mLastId;
+        return UrlBuilder.getUrl(ActionConstants.ACTION_THEME_NEWEST, params);
     }
 }

@@ -14,11 +14,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
 import com.zmdx.enjoyshow.entity.ESComment;
-import com.zmdx.enjoyshow.entity.ESPhoto;
 import com.zmdx.enjoyshow.entity.ESPhotoSet;
 import com.zmdx.enjoyshow.entity.ESPicInfo;
 import com.zmdx.enjoyshow.entity.ESUser;
-import com.zmdx.enjoyshow.entity.PraiseInfo;
+import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.fragment.detail.ui.ESPicSetView;
 import com.zmdx.enjoyshow.fragment.profile.UserProfileActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
@@ -192,7 +191,6 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                LogHelper.d(TAG, "赞状态同步成功");
                 int state = response.optInt("state", -1);
                 if (state == 0) {
                     JSONObject result = response.optJSONObject("result");
@@ -205,14 +203,14 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
                         Toast.makeText(ImageDetailActivity.this, "投票失败,票数已经投完", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(ImageDetailActivity.this, "投票失败,服务器异常", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ImageDetailActivity.this, "投票失败," + response.optString("errorMsg"), Toast.LENGTH_SHORT).show();
                 }
                 v.setEnabled(true);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                LogHelper.d(TAG, "赞状态同步失败");
+                LogHelper.d(TAG, "投票失败");
                 Toast.makeText(ImageDetailActivity.this, "投票失败", Toast.LENGTH_SHORT).show();
                 v.setEnabled(true);
             }
@@ -318,7 +316,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         mPraiseImage = (ImageView) findViewById(R.id.praiseImage);
         mPraiseNumTv = (TextView) findViewById(R.id.praiseNumTv);
         updatePraisedStatus(data);
-        final List<PraiseInfo> praises = data.getPraiseList();
+        final List<ESUser> praises = data.getPraiseList();
         Context context = getApplicationContext();
         int headSize = BaseInfoHelper.dip2px(context, 23);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(headSize, headSize);
@@ -326,7 +324,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         if (praises != null && praises.size() > 0) {
             int limit = Math.min(7, praises.size());
             for (int i = 0; i < limit; i++) {
-                PraiseInfo pi = praises.get(i);
+                ESUser pi = praises.get(i);
                 ImageView view = new ImageView(context);
                 view.setTag(pi.getId());//getId()为点赞人的userId
                 view.setOnClickListener(new View.OnClickListener() {

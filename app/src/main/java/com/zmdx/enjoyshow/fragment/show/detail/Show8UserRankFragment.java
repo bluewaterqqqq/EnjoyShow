@@ -1,10 +1,8 @@
-package com.zmdx.enjoyshow.fragment.pic;
+package com.zmdx.enjoyshow.fragment.show.detail;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,7 +14,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
-import com.zmdx.enjoyshow.entity.ESPhoto;
+import com.zmdx.enjoyshow.entity.ESUser;
+import com.zmdx.enjoyshow.fragment.adapter.UserListAdapter;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
@@ -30,39 +29,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by zhangyan on 15/10/26.
+ * Created by baidu on 15/11/30.
  */
-public class PicRecommendFragment extends Fragment implements IRefreshListener {
+public class Show8UserRankFragment extends Fragment {
 
-    private static final String TAG = "PicRecommendFragment";
+    private static final String TAG = "Show8UserRankFragment";
 
-    private static final int LIMIT = 20;
+    private ArrayList<ESUser> mData;
 
-    private RecyclerView mRecyclerView;
+    private String mLastId;
 
-    private LinearLayoutManager mLayoutManager;
-
-    private RecommandAdapter mAdapter;
-
-    private List<ESPhoto> mPics = new ArrayList<ESPhoto>();
-
-    private boolean mPulling = false;
-
-    /**
-     * 增量更新时，url中的key为lastId,如果下拉刷新数据，传0，如果增量更新，传数据中的最后一条orderId的值
-     */
-    private String mLastId = "0";
+    private String mThemeId;
 
     private View mEntireView;
 
+    private LinearLayoutManager mLayoutManager;
+
+    private UserListAdapter mAdapter;
+
+    private RecyclerView mRecyclerView;
+
+    private boolean mPulling = false;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        mData = (ArrayList<ESUser>) bundle.getSerializable("data");
+        mThemeId = bundle.getString("themeId");
+        if (mData != null) {
+            if (mData.size() > 0) {
+                mLastId = mData.get(mData.size() - 1).getOrderId();
+            }
+        }
+    }
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mEntireView == null) {
-            mEntireView = inflater.inflate(R.layout.latest_pic_layout, container, false);
+            mEntireView = inflater.inflate(R.layout.show8_detail_fragment_rank_layout, container, false);
             initViews(mEntireView);
-            mPics.clear();
-            pullData(false);
         }
         ViewGroup parent = (ViewGroup) mEntireView.getParent();
         if (parent != null) {
@@ -72,18 +79,12 @@ public class PicRecommendFragment extends Fragment implements IRefreshListener {
     }
 
     private void initViews(View view) {
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.userRankRecyclerView);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new GridLayoutManager(getContext(), 3);
-//        mLayoutManager = new GridLayoutManager(getContext(), 1);
+        mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new RecommandAdapter(getContext(), mPics);
+        mAdapter = new UserListAdapter(view.getContext(), mData);
         mRecyclerView.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -94,54 +95,35 @@ public class PicRecommendFragment extends Fragment implements IRefreshListener {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 int lastVisibleItem = mLayoutManager.findLastVisibleItemPosition();
                 int totalItemCount = mLayoutManager.getItemCount();
-                //lastVisibleItem >= totalItemCount - 4 表示剩下4个item自动加载
+                //lastVisibleItem >= totalItemCount - 2 表示剩下2个item自动加载
                 // dy>0 表示向下滑动
-                if (lastVisibleItem >= totalItemCount - 3 && dy > 0) {
-                    pullData(true);
+                if (lastVisibleItem >= totalItemCount - 4 && dy > 0) {
+                    pullData();
                 }
             }
         });
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mRecyclerView != null) {
-            mRecyclerView.clearOnScrollListeners();
-        }
-    }
-
-    private void pullData(final boolean order) {
+    private void pullData() {
         if (mPulling) {
             return;
         }
         mPulling = true;
-        if (order) {
-            LogHelper.d(TAG, "开始增量拉取");
-        } else {
-            LogHelper.d(TAG, "开始下拉刷新");
-        }
-        final String url = createUrl(order);
+        LogHelper.d(TAG, "开始增量拉取");
+        final String url = createUrl();
         LogHelper.d(TAG, "url:" + url);
         final RequestQueue requestQueue = RequestQueueManager.getRequestQueue();
         JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                mPulling = false;
                 LogHelper.d(TAG, "response:" + response);
-                List<ESPhoto> data = parseResponse2Data(response);
+                List<ESUser> data = parseResponse2Data(response);
                 if (data != null && data.size() > 0) {
-                    if (order) {
-                        mAdapter.appendData(data);
-                        // 更新lastId
-                        mLastId = data.get(data.size() - 1).getOrderId();
-                    } else {
-                        mPics.clear();
-                        mPics.addAll(data);
-                        mAdapter.notifyDataSetChanged();
-                    }
-
+                    mAdapter.appendData(data);
+                    // 更新lastId
+                    mLastId = data.get(data.size() - 1).getOrderId();
                 }
+                mPulling = false;
             }
         }, new Response.ErrorListener() {
             @Override
@@ -154,38 +136,38 @@ public class PicRecommendFragment extends Fragment implements IRefreshListener {
         requestQueue.add(request);
     }
 
-    private List<ESPhoto> parseResponse2Data(JSONObject response) {
-        List<ESPhoto> list = null;
+    private List<ESUser> parseResponse2Data(JSONObject response) {
+        List<ESUser> list = null;
         if (response != null) {
             int state = -1;
             try {
                 state = response.getInt("state");
                 if (state == 0) {
                     JSONObject result = response.getJSONObject("result");
-                    JSONArray data = result.optJSONArray("photoSet");
+                    JSONArray data = result.optJSONArray("user");
                     if (data != null) {
-                        list = new ArrayList<ESPhoto>();
-                        list.addAll(ESPhoto.convertListByJSON(data));
+                        list = new ArrayList<ESUser>();
+                        list.addAll(ESUser.convertByJSONArray(data));
                     }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         }
         return list;
     }
 
-    protected String createUrl(boolean order) {
-        String lastId = order ? mLastId : "0";
-        String params = "?category=1"
-                + "&lastId=" + lastId
-                + "&limit=" + LIMIT;
-        return UrlBuilder.getUrl(ActionConstants.ACTION_QUERY_PHOTO_WALL, params);
+    private String createUrl() {
+        String params = "?themeCycleId=" + mThemeId +
+                "&limit=21&lastId=" + mLastId;
+        return UrlBuilder.getUrl(ActionConstants.ACTION_THEME_USERRANK, params);
     }
 
     @Override
-    public void onRefresh() {
-        pullData(false);
+    public void onPause() {
+        super.onPause();
+        if (mRecyclerView != null) {
+            mRecyclerView.clearOnScrollListeners();
+        }
     }
 }

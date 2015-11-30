@@ -35,6 +35,9 @@
         <activity
             android:name=".fragment.profile.UserProfileActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".fragment.show.Show8DetailActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

@@ -31,7 +31,6 @@ public class ImageLoaderManager {
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
                 ESApplication.getInstance())
                 .memoryCacheSizePercentage(15)// 设置内存缓存为当前应用最大内存的15%;
-                .writeDebugLogs()
                 .build();
 
         if (sImageLoader.isInited()) {
