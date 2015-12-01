@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/public_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPrimary"
+        android:gravity="center_vertical"
+        app:navigationIcon="@null">
+
+        <TextView
+            android:id="@+id/publishBtn"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:gravity="center"
+            android:paddingRight="10dp"
+            android:text="发布" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <EditText
+        android:id="@+id/publish_inputDesc"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="请输入您想分享的内容"
+        android:layout_marginTop="6dp"
+        android:textSize="15dp"
+        android:padding="6dp"
+        android:textColor="#d0000000"
+        android:textColorHint="#50000000"
+        android:singleLine="true" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/publish_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="6dp" />
+</LinearLayout>

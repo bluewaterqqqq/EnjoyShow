@@ -38,6 +38,10 @@
         <activity
             android:name=".fragment.show.Show8DetailActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".fragment.publish.PublishActivity" />
+        <activity android:name="me.iwf.photopicker.PhotoPickerActivity" />
+
+        <activity android:name="me.iwf.photopicker.PhotoPagerActivity" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

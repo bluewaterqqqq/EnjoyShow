@@ -9,20 +9,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
-import com.zmdx.enjoyshow.entity.ESPhoto;
 import com.zmdx.enjoyshow.entity.ESTheme;
 import com.zmdx.enjoyshow.fragment.show.Show8Adapter;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
-import com.zmdx.enjoyshow.user.ESUserManager;
 import com.zmdx.enjoyshow.utils.LogHelper;
 
 import org.json.JSONArray;

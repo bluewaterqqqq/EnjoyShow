@@ -9,14 +9,13 @@ import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
 import com.zmdx.enjoyshow.entity.ESComment;
 import com.zmdx.enjoyshow.entity.ESPhotoSet;
 import com.zmdx.enjoyshow.entity.ESPicInfo;
-import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.fragment.detail.ui.ESPicSetView;
 import com.zmdx.enjoyshow.fragment.profile.UserProfileActivity;

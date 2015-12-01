@@ -36,4 +36,6 @@ public class ActionConstants {
 
     public static final String ACTION_THEME_USERRANK = CONTEXT + "photo_queryUserCycleRanking.action";
 
+    public static final String ACTION_UPLOAD_IMAGES = CONTEXT + "photo_uploadPhoto.action";
+
 }

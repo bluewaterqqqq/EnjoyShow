@@ -17,11 +17,12 @@ import com.zmdx.enjoyshow.fragment.Fragment1;
 import com.zmdx.enjoyshow.fragment.Fragment2;
 import com.zmdx.enjoyshow.fragment.Fragment4;
 import com.zmdx.enjoyshow.fragment.Fragment5;
+import com.zmdx.enjoyshow.fragment.publish.PublishActivity;
 
 /**
- *  Created by zhangyan on 15/10/26.
+ * Created by zhangyan on 15/10/26.
  */
-public class MainActivity extends BaseAppCompatActivity implements TabHost.OnTabChangeListener{
+public class MainActivity extends BaseAppCompatActivity implements TabHost.OnTabChangeListener {
 
     private static final String TAB_1_TAG = "tab_1";
     private static final String TAB_2_TAG = "tab_2";
@@ -93,7 +94,7 @@ public class MainActivity extends BaseAppCompatActivity implements TabHost.OnTab
             tabImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent in = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent in = new Intent(MainActivity.this, PublishActivity.class);
                     startActivity(in);
                 }
             });
@@ -121,21 +122,21 @@ public class MainActivity extends BaseAppCompatActivity implements TabHost.OnTab
     public void onTabChanged(String tag) {
         final Resources res = getResources();
         if (tag.equals(TAB_1_TAG)) {
-            for (int i=0;i<mIndicators.length;i++) {
+            for (int i = 0; i < mIndicators.length; i++) {
                 if (i == 0) {
-                    ((TextView)mIndicators[i].findViewById(R.id.tab_text)).setTextColor(getResources().getColor(R.color.color_main));
+                    ((TextView) mIndicators[i].findViewById(R.id.tab_text)).setTextColor(getResources().getColor(R.color.color_main));
                 } else {
-                    ((TextView)mIndicators[i].findViewById(R.id.tab_text)).setTextColor(Color.WHITE);
+                    ((TextView) mIndicators[i].findViewById(R.id.tab_text)).setTextColor(Color.WHITE);
                 }
             }
 
             setTitle("照片墙");
         } else if (tag.equals(TAB_2_TAG)) {
-            for (int i=0;i<mIndicators.length;i++) {
+            for (int i = 0; i < mIndicators.length; i++) {
                 if (i == 1) {
-                    ((TextView)mIndicators[i].findViewById(R.id.tab_text)).setTextColor(getResources().getColor(R.color.color_main));
+                    ((TextView) mIndicators[i].findViewById(R.id.tab_text)).setTextColor(getResources().getColor(R.color.color_main));
                 } else {
-                    ((TextView)mIndicators[i].findViewById(R.id.tab_text)).setTextColor(Color.WHITE);
+                    ((TextView) mIndicators[i].findViewById(R.id.tab_text)).setTextColor(Color.WHITE);
                 }
             }
             setTitle("秀吧");
@@ -149,20 +150,20 @@ public class MainActivity extends BaseAppCompatActivity implements TabHost.OnTab
 //            }
             setTitle("照片墙");
         } else if (tag.equals(TAB_4_TAG)) {
-            for (int i=0;i<mIndicators.length;i++) {
+            for (int i = 0; i < mIndicators.length; i++) {
                 if (i == 3) {
-                    ((TextView)mIndicators[i].findViewById(R.id.tab_text)).setTextColor(getResources().getColor(R.color.color_main));
+                    ((TextView) mIndicators[i].findViewById(R.id.tab_text)).setTextColor(getResources().getColor(R.color.color_main));
                 } else {
-                    ((TextView)mIndicators[i].findViewById(R.id.tab_text)).setTextColor(Color.WHITE);
+                    ((TextView) mIndicators[i].findViewById(R.id.tab_text)).setTextColor(Color.WHITE);
                 }
             }
             setTitle("发现");
         } else if (tag.equals(TAB_5_TAG)) {
-            for (int i=0;i<mIndicators.length;i++) {
+            for (int i = 0; i < mIndicators.length; i++) {
                 if (i == 4) {
-                    ((TextView)mIndicators[i].findViewById(R.id.tab_text)).setTextColor(getResources().getColor(R.color.color_main));
+                    ((TextView) mIndicators[i].findViewById(R.id.tab_text)).setTextColor(getResources().getColor(R.color.color_main));
                 } else {
-                    ((TextView)mIndicators[i].findViewById(R.id.tab_text)).setTextColor(Color.WHITE);
+                    ((TextView) mIndicators[i].findViewById(R.id.tab_text)).setTextColor(Color.WHITE);
                 }
             }
             setTitle("个人主页");
