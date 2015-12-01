@@ -64,10 +64,10 @@ public class Show8DetailActivity extends BaseAppCompatActivity {
             finish();
             return;
         }
-
-        // 初始化
+        // 初始化tab之上部分的界面
         initBaseViews(mThemeData);
 
+        // 拉取3个tab页的数据
         pullData();
     }
 
@@ -135,7 +135,7 @@ public class Show8DetailActivity extends BaseAppCompatActivity {
 
         // init cover image
         ImageView coverView = (ImageView) findViewById(R.id.show8_detail_cover);
-        ImageLoaderManager.getImageLoader().displayImage(data.getmBgUrl(), coverView, ImageLoaderOptionsUtils.getCoverImageOptions());
+        ImageLoaderManager.getImageLoader().displayImage(data.getInsideBgUrl(), coverView, ImageLoaderOptionsUtils.getCoverImageOptions());
 
         TextView contentTv = (TextView) findViewById(R.id.show8_detail_content);
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");

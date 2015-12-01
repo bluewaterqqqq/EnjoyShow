@@ -170,7 +170,7 @@ public class Show8NewestFragment extends Fragment {
     }
 
     private String createUrl() {
-        String params = "?themeId=" + mThemeId +
+        String params = "?themeCycleId=" + mThemeId +
                 "&limit=21&lastId=" + mLastId;
         return UrlBuilder.getUrl(ActionConstants.ACTION_THEME_NEWEST, params);
     }

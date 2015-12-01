@@ -38,6 +38,17 @@ public class ESTheme implements Serializable {
     String rule;
     String notice;
 
+    // 详情页内的cover图url
+    String insideBgUrl;
+
+    public String getInsideBgUrl() {
+        return insideBgUrl;
+    }
+
+    public void setInsideBgUrl(String insideBgUrl) {
+        this.insideBgUrl = insideBgUrl;
+    }
+
     public String getAwardSetting() {
         return awardSetting;
     }
@@ -180,6 +191,7 @@ public class ESTheme implements Serializable {
                 theme.setAwardSetting(obj.optString("awardSetting"));
                 theme.setRule(obj.optString("role"));
                 theme.setNotice(obj.optString("notice"));
+                theme.setInsideBgUrl(obj.optString("insideBgUrl"));
                 list.add(theme);
             }
         } catch (JSONException e) {
