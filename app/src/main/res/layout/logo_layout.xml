@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2015 Baidu, Inc. All Rights Reserved.
+  -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/logo_bg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/app_name"
+            android:textColor="#ffffff"
+            android:textSize="30dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="属于你的生活秀场"
+            android:textColor="#b0ffffff"
+            android:textSize="15dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center_horizontal|bottom"
+        android:paddingBottom="10dp"
+        android:orientation="vertical">
+
+        <Button
+            android:onClick="onClickRegist"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:background="@drawable/white_btn_bg"
+            android:textColor="@android:color/holo_orange_dark"
+            android:text="注册" />
+
+        <Button
+            android:onClick="onClickLogin"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/yellow_btn_bg"
+            android:textColor="#ffffff"
+            android:text="登录" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:gravity="center_horizontal|bottom"
+        android:orientation="vertical">
+
+        <Button
+            android:onClick="onClickTry"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:background="@drawable/yellow_oval_btn_bg"
+            android:text="逛一逛"
+            android:textColor="#ffffff"
+            android:textSize="13dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            android:textSize="10dp"
+            android:textColor="#b0ffffff"
+            android:text="——————————使用第三方软件登录——————————" />
+
+        <ImageView
+            android:onClick="onClickWechat"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:clickable="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/wechat_button_nor" />
+
+    </LinearLayout>
+</LinearLayout>

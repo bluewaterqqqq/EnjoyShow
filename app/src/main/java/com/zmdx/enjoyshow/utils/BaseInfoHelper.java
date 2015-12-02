@@ -22,7 +22,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -30,7 +29,6 @@ import android.view.Surface;
 import android.view.WindowManager;
 
 import com.zmdx.enjoyshow.common.ESConfig;
-import com.zmdx.enjoyshow.fragment.detect.ESCardStackAdapter;
 
 
 /**

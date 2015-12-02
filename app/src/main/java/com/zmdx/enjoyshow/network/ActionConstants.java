@@ -38,4 +38,10 @@ public class ActionConstants {
 
     public static final String ACTION_UPLOAD_IMAGES = CONTEXT + "photo_uploadPhoto.action";
 
+    public static final String ACTION_REGISTER = CONTEXT + "user_register.action";
+
+    public static final String ACTION_GET_CODE = CONTEXT + "user_createCaptcha.action";
+
+    public static final String ACTION_LOGIN = CONTEXT + "user_login.action";
+
 }

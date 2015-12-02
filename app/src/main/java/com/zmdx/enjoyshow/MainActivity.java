@@ -13,11 +13,11 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
-import com.zmdx.enjoyshow.fragment.Fragment1;
-import com.zmdx.enjoyshow.fragment.Fragment2;
-import com.zmdx.enjoyshow.fragment.Fragment4;
-import com.zmdx.enjoyshow.fragment.Fragment5;
-import com.zmdx.enjoyshow.fragment.publish.PublishActivity;
+import com.zmdx.enjoyshow.main.Fragment1;
+import com.zmdx.enjoyshow.main.Fragment2;
+import com.zmdx.enjoyshow.main.Fragment4;
+import com.zmdx.enjoyshow.main.Fragment5;
+import com.zmdx.enjoyshow.main.publish.PublishActivity;
 
 /**
  * Created by zhangyan on 15/10/26.

@@ -7,12 +7,12 @@
     <application
         android:name=".ESApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LogoActivity"
+            android:name=".main.login.LogoActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme">
@@ -26,22 +26,23 @@
             android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".fragment.detail.ImageDetailActivity"
+            android:name=".main.detail.ImageDetailActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".fragment.detail.AllPraisedActivity"
+            android:name=".main.detail.AllPraisedActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".fragment.profile.UserProfileActivity"
+            android:name=".main.profile.UserProfileActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".fragment.show.Show8DetailActivity"
+            android:name=".main.show.Show8DetailActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".fragment.publish.PublishActivity" />
+        <activity android:name=".main.publish.PublishActivity" />
         <activity android:name="me.iwf.photopicker.PhotoPickerActivity" />
 
         <activity android:name="me.iwf.photopicker.PhotoPagerActivity" />
+        <activity android:name=".main.login.LoginRegistActivity" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
