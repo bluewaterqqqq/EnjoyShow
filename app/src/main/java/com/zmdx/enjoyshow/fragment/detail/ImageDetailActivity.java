@@ -329,8 +329,8 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String userId = (String) v.getTag();
-                        UserProfileActivity.start(ImageDetailActivity.this, userId);
+                        int userId = (Integer) v.getTag();
+                        UserProfileActivity.start(ImageDetailActivity.this, userId + "");
 
                     }
                 });

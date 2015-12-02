@@ -148,7 +148,7 @@ public class MainActivity extends BaseAppCompatActivity implements TabHost.OnTab
 //                    ((TextView)mIndicators[i].findViewById(R.id.tab_text)).setTextColor(Color.WHITE);
 //                }
 //            }
-            setTitle("照片墙");
+//            setTitle("照片墙");
         } else if (tag.equals(TAB_4_TAG)) {
             for (int i = 0; i < mIndicators.length; i++) {
                 if (i == 3) {
