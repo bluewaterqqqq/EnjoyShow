@@ -45,10 +45,6 @@
                 android:layout_height="match_parent"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
                     <FrameLayout
                         android:id="@+id/show8_detail_contentLayout"
                         android:layout_width="match_parent"
@@ -59,7 +55,6 @@
                         <include layout="@layout/show8_detail_base_content" />
                     </FrameLayout>
 
-                </ScrollView>
             </android.support.design.widget.CollapsingToolbarLayout>
 
             <android.support.design.widget.TabLayout
