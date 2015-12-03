@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2015 Baidu, Inc. All Rights Reserved.
+  -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:id="@+id/profile_head_bg"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="10dp"
+        >
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/profile_headIcon"
+            android:scaleType="centerCrop"
+            />
+        <TextView
+            android:id="@+id/profile_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="15dp"
+            android:singleLine="true"
+            android:shadowColor="#b0000000"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:layout_marginTop="6dp"
+            />
+        <TextView
+            android:id="@+id/profile_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:textSize="12dp"
+            android:singleLine="true"
+            android:shadowColor="#b0000000"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:layout_marginTop="6dp"
+            />
+
+    </LinearLayout>
+
+</FrameLayout>
