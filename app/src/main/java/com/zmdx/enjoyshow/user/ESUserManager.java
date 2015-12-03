@@ -8,13 +8,16 @@ import com.zmdx.enjoyshow.entity.ESUser;
  */
 public class ESUserManager {
 
+    public static final int STATUS_UNLOGIN = 1;
+    public static final int STATUS_LOGIN_BY_ES = 2;
+    public static final int STATUS_LOGIN_BY_THRID = 4;
+    public static final int STATUS_EXPERIENCE = 3;
     private static ESUserManager INSTANCE;
+    private ESUser mUser;
 
     private ESUserManager() {
 
     }
-
-    private ESUser mUser;
 
     public synchronized static ESUserManager getInstance() {
         if (INSTANCE == null) {
@@ -30,19 +33,24 @@ public class ESUserManager {
         return "0";
     }
 
-    public void setAutoLogin() {
-        ESPreferences.saveLoginStatus(ESPreferences.STATUS_LOGIN);
+    public void setLoginStatus(int status) {
+        ESPreferences.saveLoginStatus(status);
     }
 
     public void saveUserInfo(String user) {
-        ESPreferences.saveLoginStatus(ESPreferences.STATUS_LOGIN);
         ESPreferences.saveUserInfo(user);
         mUser = ESUser.convertByJSON(user);
     }
 
-    public void exitLogin() {
+    public void saveUserInfo(ESUser user) {
+        String userStr = ESUser.convert2JSON(user).toString();
+        ESPreferences.saveUserInfo(userStr);
+        mUser = user;
+    }
+
+    public void logout() {
         mUser = null;
-        ESPreferences.saveLoginStatus(ESPreferences.STATUS_UNLOGIN);
+        ESPreferences.saveLoginStatus(ESUserManager.STATUS_UNLOGIN);
     }
 
     public ESUser getCurrentUser() {

@@ -104,7 +104,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     JSONObject obj = response.optJSONObject("result");
                     String user = obj.optString("user");
                     ESUserManager.getInstance().saveUserInfo(user);
-                    ESUserManager.getInstance().setAutoLogin();
+                    ESUserManager.getInstance().setLoginStatus(ESUserManager.STATUS_LOGIN_BY_ES);
                     startMainActivity();
                     finish();
                 } else if (state == 1) {

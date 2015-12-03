@@ -44,4 +44,5 @@ public class ActionConstants {
 
     public static final String ACTION_LOGIN = CONTEXT + "user_login.action";
 
+    public static final String ACTION_THIRD_LOGIN = CONTEXT + "user_thirdPartyLogin.action";
 }

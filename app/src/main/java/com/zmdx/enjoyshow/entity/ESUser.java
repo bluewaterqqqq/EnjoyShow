@@ -148,4 +148,17 @@ public class ESUser implements Serializable {
         }
         return result;
     }
+
+    public static JSONObject convert2JSON(ESUser user) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("gender", user.getGender());
+            obj.put("headPortrait", user.getHeadPortrait());
+            obj.put("id", user.getId());
+            obj.put("username", user.getUserName());
+        } catch (JSONException e) {
+            // ignore
+        }
+        return obj;
+    }
 }

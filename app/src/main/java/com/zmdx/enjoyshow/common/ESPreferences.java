@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.zmdx.enjoyshow.ESApplication;
+import com.zmdx.enjoyshow.user.ESUserManager;
 
 /**
  * Created by zhangyan on 15/12/2.
@@ -15,11 +16,10 @@ public class ESPreferences {
 
     private static final String KEY_ALREADY_LOGIN = "alreadyLogin";
     private static final String KEY_USER_INFO = "userInfo";
+    private static final String KEY_WX_REFRESH_TOKEN = "wxrefreshtoken";
     private static SharedPreferences sSp;
 
-    public static final int STATUS_UNLOGIN = 1;
-    public static final int STATUS_LOGIN = 2;
-    public static final int STATUS_EXPERIENCE = 3;
+
 
 
     private static final String ES_PS_NAME = "es_ps_name";
@@ -33,7 +33,7 @@ public class ESPreferences {
     }
 
     public static int getLoginStatus() {
-        return sSp.getInt(KEY_ALREADY_LOGIN, STATUS_UNLOGIN);
+        return sSp.getInt(KEY_ALREADY_LOGIN, ESUserManager.STATUS_UNLOGIN);
     }
 
     public static void saveUserInfo(String user) {
@@ -42,5 +42,13 @@ public class ESPreferences {
 
     public static String getUserInfo() {
         return sSp.getString(KEY_USER_INFO, null);
+    }
+
+    public static void saveWXRefreshToken(String token) {
+        sSp.edit().putString(KEY_WX_REFRESH_TOKEN, token).apply();
+    }
+
+    public static String getWXRefreshToken() {
+        return sSp.getString(KEY_WX_REFRESH_TOKEN, "");
     }
 }
