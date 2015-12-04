@@ -14,6 +14,7 @@ import com.android.volley.request.JsonObjectRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.entity.ESPhoto;
+import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.main.detail.ImageDetailActivity;
 import com.zmdx.enjoyshow.main.profile.UserProfileActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
@@ -74,7 +75,7 @@ public class FollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         pHolder.coverView.setOnClickListener(this);
         pHolder.coverView.setTag(item.getId());
         pHolder.headView.setOnClickListener(this);
-        pHolder.headView.setTag(item.getUserId());
+        pHolder.headView.setTag(item.getUser());
         pHolder.commentLayout.setOnClickListener(this);
         pHolder.commentLayout.setTag(item.getId());
         pHolder.praiseLayout.setOnClickListener(this);
@@ -150,8 +151,8 @@ public class FollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             String picSetId = (String) v.getTag();
             ImageDetailActivity.start(mContext, picSetId);
         } else if (id == R.id.follow_headIcon) {
-            String userId = (String) v.getTag();
-            UserProfileActivity.start(mContext, userId);
+            ESUser user = (ESUser) v.getTag();
+            UserProfileActivity.start(mContext, user);
         } else if (id == R.id.follow_praiseLayout) {
             ESPhoto item = (ESPhoto) v.getTag();
             handlePraiseText(v, item);

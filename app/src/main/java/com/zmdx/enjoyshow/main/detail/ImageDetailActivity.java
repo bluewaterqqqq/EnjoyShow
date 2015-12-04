@@ -325,12 +325,12 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
             for (int i = 0; i < limit; i++) {
                 ESUser pi = praises.get(i);
                 ImageView view = new ImageView(context);
-                view.setTag(pi.getId());//getId()为点赞人的userId
+                view.setTag(pi);//getId()为点赞人的user
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        int userId = (Integer) v.getTag();
-                        UserProfileActivity.start(ImageDetailActivity.this, userId + "");
+                        ESUser user = (ESUser) v.getTag();
+                        UserProfileActivity.start(ImageDetailActivity.this, user);
 
                     }
                 });
@@ -372,6 +372,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         mUserName.setText(data.getUser().getUserName());
         mPostTime.setText(ESDateFormat.format(data.getUploadDate()));
         mDescTv.setText(data.getDescStr());
+        mUserHeader.setOnClickListener(this);
     }
 
     private void initPicsView(ESPhotoSet data) {
@@ -414,6 +415,8 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
             mCommentTargetId = -1; // 恢复mCommentTargetId的值
         } else if (v == mPraiseLayout) {
             // TODO 跳转到所有赞的列表
+        } else if (v == mUserHeader) {
+            UserProfileActivity.start(this, mData.getUser());
         }
     }
 

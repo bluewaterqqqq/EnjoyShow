@@ -87,6 +87,6 @@ public class UserListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public void onClick(View v) {
         ESUser user = (ESUser) v.getTag();
-        UserProfileActivity.start(mContext, user.getId() + "");
+        UserProfileActivity.start(mContext, user);
     }
 }

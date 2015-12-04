@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class ESUser implements Serializable {
     private String age = "";
-    private String gender;//性别 0未知 1男 2女
+    private String gender = "";//性别 0未知 1男 2女
     private String headPortrait;//头像
     private int id;
     private String loginName;
@@ -23,6 +23,103 @@ public class ESUser implements Serializable {
     private int report;
     private String userName = "";
     private int votes;
+    private String addr;
+    private String introdution;
+    private String isValidate;
+    private String telephone;
+    private boolean isAttention;
+
+    public static ESUser convertByJSON(String user) {
+        ESUser esUser = new ESUser();
+        try {
+            JSONObject obj = new JSONObject(user);
+            esUser.setAge(obj.optString("age"));
+            esUser.setGender(obj.optString("gender"));
+            esUser.setHeadPortrait(obj.optString("headPortrait"));
+            esUser.setId(obj.optInt("id"));
+            esUser.setOrgId(obj.optInt("orgId"));
+            esUser.setPraise(obj.optInt("praise"));
+            esUser.setReport(obj.optInt("report"));
+            esUser.setUserName(obj.optString("username"));
+            esUser.setVotes(obj.optInt("votes"));
+            esUser.setLoginName(obj.optString("loginName"));
+            esUser.setOrderId(obj.optString("orderId"));
+            esUser.setAddr(obj.optString("address"));
+            esUser.setTelephone(obj.optString("telephone"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return esUser;
+    }
+
+    public static List<ESUser> convertByJSONArray(JSONArray array) {
+        List<ESUser> result = new ArrayList<ESUser>();
+        if (array != null) {
+            int length = array.length();
+            for (int i = 0; i < length; i++) {
+                try {
+                    ESUser user = ESUser.convertByJSON(array.getString(i));
+                    result.add(user);
+                } catch (JSONException e) {
+                    // ignore
+                }
+            }
+        }
+        return result;
+    }
+
+    public static JSONObject convert2JSON(ESUser user) {
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("gender", user.getGender());
+            obj.put("headPortrait", user.getHeadPortrait());
+            obj.put("id", user.getId());
+            obj.put("username", user.getUserName());
+        } catch (JSONException e) {
+            // ignore
+        }
+        return obj;
+    }
+
+    public String getIsValidate() {
+        return isValidate;
+    }
+
+    public void setIsValidate(String isValidate) {
+        this.isValidate = isValidate;
+    }
+
+    public boolean isAttention() {
+        return isAttention;
+    }
+
+    public void setIsAttention(boolean isAttention) {
+        this.isAttention = isAttention;
+    }
+
+    public String getAddr() {
+        return addr;
+    }
+
+    public void setAddr(String addr) {
+        this.addr = addr;
+    }
+
+    public String getIntrodution() {
+        return introdution;
+    }
+
+    public void setIntrodution(String introdution) {
+        this.introdution = introdution;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
 
     public String getOrderId() {
         return orderId;
@@ -48,6 +145,11 @@ public class ESUser implements Serializable {
         this.age = age;
     }
 
+    /**
+     * 0未知 1男 2女
+     *
+     * @return
+     */
     public String getGender() {
         return gender;
     }
@@ -110,55 +212,5 @@ public class ESUser implements Serializable {
 
     public void setVotes(int votes) {
         this.votes = votes;
-    }
-
-    public static ESUser convertByJSON(String user) {
-        ESUser esUser = new ESUser();
-        try {
-            JSONObject obj = new JSONObject(user);
-            esUser.setAge(obj.optString("age"));
-            esUser.setGender(obj.optString("gender"));
-            esUser.setHeadPortrait(obj.optString("headPortrait"));
-            esUser.setId(obj.optInt("id"));
-            esUser.setOrgId(obj.optInt("orgId"));
-            esUser.setPraise(obj.optInt("praise"));
-            esUser.setReport(obj.optInt("report"));
-            esUser.setUserName(obj.optString("username"));
-            esUser.setVotes(obj.optInt("votes"));
-            esUser.setLoginName(obj.optString("loginName"));
-            esUser.setOrderId(obj.optString("orderId"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return esUser;
-    }
-
-    public static List<ESUser> convertByJSONArray(JSONArray array) {
-        List<ESUser> result = new ArrayList<ESUser>();
-        if (array != null) {
-            int length = array.length();
-            for (int i = 0; i < length; i++) {
-                try {
-                    ESUser user = ESUser.convertByJSON(array.getString(i));
-                    result.add(user);
-                } catch (JSONException e) {
-                    // ignore
-                }
-            }
-        }
-        return result;
-    }
-
-    public static JSONObject convert2JSON(ESUser user) {
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("gender", user.getGender());
-            obj.put("headPortrait", user.getHeadPortrait());
-            obj.put("id", user.getId());
-            obj.put("username", user.getUserName());
-        } catch (JSONException e) {
-            // ignore
-        }
-        return obj;
     }
 }

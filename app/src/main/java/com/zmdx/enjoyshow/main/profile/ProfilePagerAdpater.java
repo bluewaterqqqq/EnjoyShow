@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.zmdx.enjoyshow.main.detect.DetectNewestFragment;
+import com.zmdx.enjoyshow.user.ESUserManager;
 
 /**
  * Created by zhangyan on 15/12/4.
@@ -19,15 +19,18 @@ public class ProfilePagerAdpater extends FragmentPagerAdapter {
 
     private boolean isMine;
 
-    public ProfilePagerAdpater(FragmentManager fm, boolean me) {
+    private String mUserId;
+
+    public ProfilePagerAdpater(FragmentManager fm, String userId) {
         super(fm);
-        if (me) {
+        isMine = ESUserManager.getInstance().getCurrentUserId().equals(userId);
+        if (isMine) {
             mTitle = new String[]{"我的享秀", "通知", "我关注的", "我的粉丝"};
         } else {
             mTitle = new String[]{"TA的图集", "TA关注的", "TA的粉丝"};
         }
 
-        isMine = me;
+        mUserId = userId;
     }
 
     @Override
@@ -38,37 +41,42 @@ public class ProfilePagerAdpater extends FragmentPagerAdapter {
     private Fragment getItemForTA(int position) {
         Fragment frag = null;
         Bundle bundle = new Bundle();
-        bundle.putBoolean("mine", false);
+        bundle.putString("userId", mUserId);
         if (position == 0) {
-//            frag = new UserPhotoSetFragment();
+            frag = new UserPhotoSetFragment();
         } else if (position == 1) {
-//            frag = new UserFollowedFragment();
+            frag = new UserFollowedFragment();
         } else if (position == 2) {
-//            frag = new UserFunsFragment();
+            frag = new UserFunsFragment();
         } else {
-            //
-//            frag = new UserPhotoSetFragment();
+            // 不会执行到
+            frag = new UserPhotoSetFragment();
         }
         frag.setArguments(bundle);
 
-//        return frag;
-        return new DetectNewestFragment();
+        return frag;
     }
 
     private Fragment getItemForMine(int position) {
+        Fragment frag = null;
+        Bundle bundle = new Bundle();
+        bundle.putString("userId", mUserId);
         if (position == 0) {
-
+            frag = new UserPhotoSetFragment();
         } else if (position == 1) {
-
+            frag = new MsgCenterFragment();
         } else if (position == 2) {
-
+            frag = new UserFollowedFragment();
+        } else if (position == 3) {
+            frag = new UserFunsFragment();
         }
-        return new DetectNewestFragment();
+        frag.setArguments(bundle);
+        return frag;
     }
 
     @Override
     public int getCount() {
-        return isMine ? 4 : 3;
+        return mTitle.length;
     }
 
     @Override

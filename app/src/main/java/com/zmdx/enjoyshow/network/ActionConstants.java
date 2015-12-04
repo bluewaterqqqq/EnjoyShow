@@ -45,4 +45,16 @@ public class ActionConstants {
     public static final String ACTION_LOGIN = CONTEXT + "user_login.action";
 
     public static final String ACTION_THIRD_LOGIN = CONTEXT + "user_thirdPartyLogin.action";
+
+    public static final String ACTION_QUERY_PERSONAL_PHOTOS = CONTEXT + "photo_queryPersonalPhotos.action"; // 用户的图集
+
+    public static final String ACTION_FOLLOWED_USERS = CONTEXT + "user_queryAttentions.action"; // 用户关注的人
+
+    public static final String ACTION_UNFOLLOW = CONTEXT + "user_cancelAttention.action"; // 取消关注
+
+    public static final String ACTION_FOLLOW = CONTEXT + "user_attention.action"; // 关注
+
+    public static final String ACTION_QUERY_FANS = CONTEXT + "user_queryFans.action"; // 我的粉丝
+
+    public static final String ACTION_USER_INFO = CONTEXT + "user_loadUserInfo.action"; // 用户详情
 }

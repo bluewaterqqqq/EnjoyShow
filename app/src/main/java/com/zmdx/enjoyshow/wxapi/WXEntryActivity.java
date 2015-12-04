@@ -169,15 +169,21 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
             @Override
             public void onResponse(JSONObject response) {
                 LogHelper.d(TAG, "用户信息上传成功, result:" + response.toString());
-                ESUser user = ESUser.convertByJSON(response.toString());
-                ESUserManager.getInstance().saveUserInfo(user);
-                ESUserManager.getInstance().setLoginStatus(ESUserManager.STATUS_LOGIN_BY_THRID);
+                int state = response.optInt("state");
+                if (state == 0) {
+                    String userJSON = response.optJSONObject("result").optString("user");
+                    ESUser user = ESUser.convertByJSON(userJSON);
+                    ESUserManager.getInstance().saveUserInfo(user);
+                    ESUserManager.getInstance().setLoginStatus(ESUserManager.STATUS_LOGIN_BY_THRID);
 
-                Toast.makeText(WXEntryActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-                startMainActivity();
-                finish();
+                    Toast.makeText(WXEntryActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                    startMainActivity();
+                    finish();
 
-                LocalBroadcastManager.getInstance(WXEntryActivity.this).sendBroadcast(new Intent(ACTION_LOG_SUCC));
+                    LocalBroadcastManager.getInstance(WXEntryActivity.this).sendBroadcast(new Intent(ACTION_LOG_SUCC));
+                } else {
+                    onFailure();
+                }
             }
         }, new Response.ErrorListener() {
             @Override

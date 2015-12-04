@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by baidu on 15/11/30.
+ * Created by zhangyan on 15/11/30.
  */
 public class Show8UserRankFragment extends Fragment {
 
