@@ -22,8 +22,6 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.zmdx.enjoyshow.MainActivity;
 import com.zmdx.enjoyshow.R;
-import com.zmdx.enjoyshow.common.ESPreferences;
-import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
@@ -143,6 +141,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     }
 
     private String createLoginUrl(String phoneNum, String pwd) {
-        return UrlBuilder.getUrl(ActionConstants.ACTION_LOGIN, "?loginname=" + phoneNum + "&password=" + pwd + "&alias=" +"adsf");
+        return UrlBuilder.getUrl(ActionConstants.ACTION_LOGIN, "?loginname=" + phoneNum + "&password=" + pwd + "&alias=" + "adsf");
     }
 }

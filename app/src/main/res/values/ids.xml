@@ -1,3 +1,4 @@
 <resources>
     <item type="id" name="commentItemView" />
+    <item name="notify_item" type="id">notify_item</item>
 </resources>

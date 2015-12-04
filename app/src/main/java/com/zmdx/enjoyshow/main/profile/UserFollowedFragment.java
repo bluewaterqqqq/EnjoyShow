@@ -22,7 +22,6 @@ import com.zmdx.enjoyshow.main.adapter.UserListAdapter;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
-import com.zmdx.enjoyshow.user.ESUserManager;
 import com.zmdx.enjoyshow.utils.LogHelper;
 
 import org.json.JSONArray;

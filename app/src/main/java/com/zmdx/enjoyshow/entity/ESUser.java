@@ -46,6 +46,9 @@ public class ESUser implements Serializable {
             esUser.setOrderId(obj.optString("orderId"));
             esUser.setAddr(obj.optString("address"));
             esUser.setTelephone(obj.optString("telephone"));
+            esUser.setIsAttention(obj.optInt("isAttention") == 1);
+            esUser.setIsValidate(obj.optString("isvalidate"));
+            esUser.setIntrodution(obj.optString("introduction"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

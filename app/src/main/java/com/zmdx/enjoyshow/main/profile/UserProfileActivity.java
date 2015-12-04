@@ -14,27 +14,27 @@ import com.zmdx.enjoyshow.main.Fragment5;
  * Created by zhangyan on 15/11/22.
  */
 public class UserProfileActivity extends AppCompatActivity {
-    public static void start(Context context, ESUser user) {
+    private String mUserId;
+
+    public static void start(Context context, String userId) {
         Intent in = new Intent(context, UserProfileActivity.class);
-        in.putExtra("user", user);
+        in.putExtra("userId", userId);
         context.startActivity(in);
     }
-
-    private ESUser mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent in = getIntent();
         if (in != null) {
-            mUser = (ESUser) in.getSerializableExtra("user");
+            mUserId = in.getStringExtra("userId");
         }
 
         setContentView(R.layout.profile_container);
 
         Fragment frag = new TAProfileFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("user", mUser);
+        bundle.putString("userId", mUserId);
         frag.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.profile_container, frag).commit();
     }

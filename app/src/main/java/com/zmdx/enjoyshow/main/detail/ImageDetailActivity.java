@@ -334,7 +334,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
                     @Override
                     public void onClick(View v) {
                         ESUser user = (ESUser) v.getTag();
-                        UserProfileActivity.start(ImageDetailActivity.this, user);
+                        UserProfileActivity.start(ImageDetailActivity.this, user.getId() + "");
 
                     }
                 });
@@ -436,7 +436,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         } else if (v == mPraiseLayout) {
             // TODO 跳转到所有赞的列表
         } else if (v == mUserHeader) {
-            UserProfileActivity.start(this, mData.getUser());
+            UserProfileActivity.start(this, mData.getUser().getId() + "");
         }
     }
 

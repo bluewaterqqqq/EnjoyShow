@@ -152,7 +152,7 @@ public class FollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ImageDetailActivity.start(mContext, picSetId);
         } else if (id == R.id.follow_headIcon) {
             ESUser user = (ESUser) v.getTag();
-            UserProfileActivity.start(mContext, user);
+            UserProfileActivity.start(mContext, user.getId() + "");
         } else if (id == R.id.follow_praiseLayout) {
             ESPhoto item = (ESPhoto) v.getTag();
             handlePraiseText(v, item);

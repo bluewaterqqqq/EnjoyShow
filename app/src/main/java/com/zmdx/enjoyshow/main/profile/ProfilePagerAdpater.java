@@ -15,7 +15,7 @@ import com.zmdx.enjoyshow.user.ESUserManager;
  */
 public class ProfilePagerAdpater extends FragmentPagerAdapter {
 
-    private String[] mTitle = new String[]{"1", "2"};
+    private String[] mTitle;
 
     private boolean isMine;
 

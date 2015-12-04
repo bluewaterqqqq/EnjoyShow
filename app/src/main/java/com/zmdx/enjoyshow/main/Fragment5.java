@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +18,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.zmdx.enjoyshow.ESApplication;
 import com.zmdx.enjoyshow.R;
@@ -69,31 +67,24 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
 
     private ESUser mUser;
 
-    private boolean mIsMine;
+    private boolean mIsMine = true;
 
     private boolean needShowSettings = false;
+
+    private String mUserId;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            mUser = (ESUser) bundle.getSerializable("user");
+            mUserId = bundle.getString("userId");
+            mIsMine = mUserId.equals(ESUserManager.getInstance().getCurrentUserId());
         } else { // 首页进入第5个tab,一定是用户本人的个人信息页,所以取登录用户的信息
-            mUser = ESUserManager.getInstance().getCurrentUser();
+            mUserId = ESUserManager.getInstance().getCurrentUserId();
             needShowSettings = true;
+            mIsMine = true;
         }
-
-        if (mUser == null) {
-            LogHelper.e(TAG, "user不能为null");
-            return;
-        }
-
-        mIsMine = mUser.getId() == Integer.valueOf(ESUserManager.getInstance().getCurrentUserId());
-    }
-
-    protected String getUserId() {
-        return mUser.getId() + "";
     }
 
     @Nullable
@@ -102,7 +93,7 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
         if (mEntireView == null) {
             mEntireView = inflater.inflate(R.layout.tab5_layout, container, false);
             initViews(mEntireView);
-            render();
+//            render();
             pullUserDetailInfo();
         }
         ViewGroup parent = (ViewGroup) mEntireView.getParent();
@@ -123,11 +114,9 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
                 int state = response.optInt("state");
                 if (state == 0) {
                     JSONObject obj = response.optJSONObject("result");
-                    JSONObject userObj = obj.optJSONObject("user");
-                    mUser.setIsAttention(userObj.optInt("isAttention") == 1);
-                    mUser.setTelephone(userObj.optString("telephone"));
-                    mUser.setIsValidate(userObj.optString("isvalidate"));
-                    mUser.setIntrodution(userObj.optString("introduction"));
+                    String userObj = obj.optString("user");
+                    mUser = ESUser.convertByJSON(userObj);
+                    render();
                     renderFollowButton();
                 }
             }
@@ -161,10 +150,14 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
     }
 
     private String createUrl() {
-        return UrlBuilder.getUrl(ActionConstants.ACTION_USER_INFO, "?userId=" + mUser.getId());
+        String userId = mUser == null ? mUserId : mUser.getId() + "";
+        return UrlBuilder.getUrl(ActionConstants.ACTION_USER_INFO, "?userId=" + userId);
     }
 
     private void render() {
+        if (mUser == null) {
+            return;
+        }
         ImageLoaderManager.getImageLoader().displayImage(mUser.getHeadPortrait(), mHeadIconIv,
                 ImageLoaderOptionsUtils.getHeadImageOptions(), new SimpleImageLoadingListener() {
                     @Override
@@ -213,7 +206,7 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
         mSettingsBtn = view.findViewById(R.id.profile_settings);
 
         mPager = (ViewPager) view.findViewById(R.id.profile_pager);
-        mAdapter = new ProfilePagerAdpater(getChildFragmentManager(), mUser.getId() + "");
+        mAdapter = new ProfilePagerAdpater(getChildFragmentManager(), mUserId);
         mPager.setAdapter(mAdapter);
         mTab = (TabLayout) view.findViewById(R.id.profile_tabLayout);
         mTab.setupWithViewPager(mPager);
@@ -248,7 +241,7 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
     private void cancelAttention() {
         mFollowBtn.setText("取消中...");
         mFollowBtn.setEnabled(false);
-        String url = UrlBuilder.getUrl(ActionConstants.ACTION_FOLLOW, "?userId=" + mUser.getId());
+        String url = UrlBuilder.getUrl(ActionConstants.ACTION_UNFOLLOW, "?userId=" + mUserId);
         final RequestQueue requestQueue = RequestQueueManager.getRequestQueue();
         JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
             @Override
@@ -278,7 +271,7 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
     private void attention() {
         mFollowBtn.setEnabled(false);
         mFollowBtn.setText("关注中...");
-        String url = UrlBuilder.getUrl(ActionConstants.ACTION_FOLLOW, "?userId=" + mUser.getId());
+        String url = UrlBuilder.getUrl(ActionConstants.ACTION_FOLLOW, "?userId=" + mUserId);
         final RequestQueue requestQueue = RequestQueueManager.getRequestQueue();
         JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
             @Override

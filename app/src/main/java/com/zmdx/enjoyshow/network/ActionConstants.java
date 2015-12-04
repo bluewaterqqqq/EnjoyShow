@@ -7,10 +7,7 @@ public class ActionConstants {
 
     private static final String CONTEXT = "draftServer/";
 
-    // 拉取最新、最热图集，参数：category=0 最新、category=1 最热
     public static final String ACTION_QUERY_PHOTO_WALL = CONTEXT + "photo_queryPhotosWall.action";
-
-    public static final String ACTION_VIEW_PICSET = CONTEXT + "photo_viewPictureSet.action";
 
     public static final String ACTION_DETECT_LATEST = CONTEXT + "photo_newestPhotoSet.action";
 
@@ -57,4 +54,6 @@ public class ActionConstants {
     public static final String ACTION_QUERY_FANS = CONTEXT + "user_queryFans.action"; // 我的粉丝
 
     public static final String ACTION_USER_INFO = CONTEXT + "user_loadUserInfo.action"; // 用户详情
+
+    public static final String ACTION_LOAD_NOTIFY = CONTEXT + "photo_loadNotify.action"; // 通知列表
 }
