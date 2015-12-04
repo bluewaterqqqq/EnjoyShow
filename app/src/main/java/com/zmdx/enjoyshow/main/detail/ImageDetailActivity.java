@@ -2,6 +2,7 @@ package com.zmdx.enjoyshow.main.detail;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
@@ -19,6 +20,7 @@ import com.zmdx.enjoyshow.entity.ESPicInfo;
 import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.main.detail.ui.ESPicSetView;
 import com.zmdx.enjoyshow.main.profile.UserProfileActivity;
+import com.zmdx.enjoyshow.main.publish.PublishActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
@@ -50,6 +52,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import me.iwf.photopicker.PhotoPagerActivity;
 
 /**
  * Created by zhangyan on 15/11/21.
@@ -381,10 +385,26 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         picSetView.setOnItemClickListener(new ESPicSetView.OnItemClickListener() {
             @Override
             public void onItemClick(View v, ESPicInfo data) {
-                LogHelper.d(TAG, "onItemClicked, data.id=" + data.getId());
+                int index = mData.getPics().indexOf(data);
+                if (index != -1) {
+                    LogHelper.d(TAG, "onItemClicked, data.id=" + data.getId());
+                    ArrayList<String> pics = new ArrayList<String>(mData.getPics().size());
+                    for (ESPicInfo pi : mData.getPics()) {
+                        pics.add(pi.getUrl());
+                    }
+                    startImagePager(pics, index);
+                }
             }
         });
         mPicSetLayout.addView(picSetView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    }
+
+    private void startImagePager(ArrayList<String> data, int position) {
+        Intent intent = new Intent(this, PhotoPagerActivity.class);
+        intent.putExtra(PhotoPagerActivity.EXTRA_CURRENT_ITEM, position);
+        intent.putExtra(PhotoPagerActivity.EXTRA_PHOTOS, data);
+        intent.putExtra(PhotoPagerActivity.EXTRA_SHOW_DELETE, false);
+        startActivity(intent);
     }
 
     private void initCommentView(ESPhotoSet data) {

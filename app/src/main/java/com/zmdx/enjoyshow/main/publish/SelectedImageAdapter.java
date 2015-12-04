@@ -30,6 +30,7 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<RecyclerView.View
     private static final int TYPE_IMAGE = 1;
     private static final int TYPE_ADD = 2;
     private static final String ADD_BTN = "addIcon";
+    private static final String TAG = "SelectedImageAdapter";
     private Context mContext;
     private List<String> mData;
 

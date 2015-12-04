@@ -1,13 +1,13 @@
 package com.zmdx.enjoyshow.utils;
 
+import android.graphics.Bitmap;
+
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.zmdx.enjoyshow.ESApplication;
 import com.zmdx.enjoyshow.R;
-
-import android.graphics.Bitmap;
 
 /**
  * Created by zhangyan on 15/11/15.
