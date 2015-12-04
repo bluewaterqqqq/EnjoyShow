@@ -16,8 +16,11 @@ import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
+import com.zmdx.enjoyshow.network.UploadMultipartEntity;
 import com.zmdx.enjoyshow.network.UploadRequest;
 import com.zmdx.enjoyshow.network.UrlBuilder;
+import com.zmdx.enjoyshow.network.multipart.MultipartEntity;
+import com.zmdx.enjoyshow.network.multipart.UrlEncodingHelper;
 import com.zmdx.enjoyshow.utils.LogHelper;
 
 import org.json.JSONObject;
@@ -83,16 +86,20 @@ public class PublishActivity extends BaseAppCompatActivity {
     }
 
     private void publishImages() {
-        String url = createUrl();
 
-        List<File> data = new ArrayList<File>();
+        String url = createUrl();
 
         UploadRequest request = new UploadRequest(url, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 LogHelper.d(TAG, "response:" + response);
-                Toast.makeText(PublishActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
-                finish();
+                int state = response.optInt("state");
+                if (state == 0) {
+                    Toast.makeText(PublishActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(PublishActivity.this, "发布失败" + response.optString("errorMsg"), Toast.LENGTH_SHORT).show();
+                }
 
             }
         }, new Response.ErrorListener() {
@@ -106,16 +113,16 @@ public class PublishActivity extends BaseAppCompatActivity {
 
         for (int i = 0; i < mData.size(); i++) {
             if (!mAdapter.isAddView(i)) {
-                request.addPart("image"+i, new File(mData.get(i)));
+                request.addPart("image", new File(mData.get(i)));
             }
         }
+        request.addPart("descs", mInputEt.getText().toString());
+        request.addPart("type", "0");
         RequestQueueManager.getRequestQueue().add(request);
     }
 
     private String createUrl() {
-        String params = "?type=0"
-                + "&descs=" + mInputEt.getText().toString();
-        return UrlBuilder.getUrl(ActionConstants.ACTION_UPLOAD_IMAGES, params);
+        return UrlBuilder.getUrl(ActionConstants.ACTION_UPLOAD_IMAGES, null);
     }
 
     @Override

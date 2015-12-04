@@ -15,10 +15,14 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
+import com.android.volley.error.AuthFailureError;
 import com.android.volley.toolbox.multipart.FilePart;
 import com.android.volley.toolbox.multipart.StringPart;
+import com.zmdx.enjoyshow.utils.LogHelper;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * A request for making a Multi Part request
@@ -32,6 +36,7 @@ public abstract class MultiPartRequest<T> extends Request<T> {
      */
     public static final int TIMEOUT_MS = 60000;
     private static final String PROTOCOL_CHARSET = "utf-8";
+    private static final String TAG = "MultiPartRequest";
     /**
      * Listener object for delivering the response
      */
@@ -105,4 +110,15 @@ public abstract class MultiPartRequest<T> extends Request<T> {
         return mMultipartEntity;
     }
 
+    @Override
+    public byte[] getBody() throws AuthFailureError {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            mMultipartEntity.writeTo(bos);
+        } catch (IOException e) {
+            LogHelper.e(TAG, "IOException writing to ByteArrayOutputStream");
+        }
+        return bos.toByteArray();
+
+    }
 }

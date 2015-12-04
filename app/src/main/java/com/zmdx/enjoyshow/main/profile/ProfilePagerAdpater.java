@@ -3,6 +3,7 @@
  */
 package com.zmdx.enjoyshow.main.profile;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -35,11 +36,33 @@ public class ProfilePagerAdpater extends FragmentPagerAdapter {
     }
 
     private Fragment getItemForTA(int position) {
+        Fragment frag = null;
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("mine", false);
+        if (position == 0) {
+//            frag = new UserPhotoSetFragment();
+        } else if (position == 1) {
+//            frag = new UserFollowedFragment();
+        } else if (position == 2) {
+//            frag = new UserFunsFragment();
+        } else {
+            //
+//            frag = new UserPhotoSetFragment();
+        }
+        frag.setArguments(bundle);
 
+//        return frag;
         return new DetectNewestFragment();
     }
 
     private Fragment getItemForMine(int position) {
+        if (position == 0) {
+
+        } else if (position == 1) {
+
+        } else if (position == 2) {
+
+        }
         return new DetectNewestFragment();
     }
 

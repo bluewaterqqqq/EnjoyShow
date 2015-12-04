@@ -2,6 +2,7 @@ package com.zmdx.enjoyshow.user;
 
 import com.zmdx.enjoyshow.common.ESPreferences;
 import com.zmdx.enjoyshow.entity.ESUser;
+import com.zmdx.enjoyshow.utils.LogHelper;
 
 /**
  * Created by zhangyan on 15/10/27.
@@ -12,6 +13,7 @@ public class ESUserManager {
     public static final int STATUS_LOGIN_BY_ES = 2;
     public static final int STATUS_LOGIN_BY_THRID = 4;
     public static final int STATUS_EXPERIENCE = 3;
+    private static final String TAG = "ESUserManager";
     private static ESUserManager INSTANCE;
     private ESUser mUser;
 
@@ -27,10 +29,11 @@ public class ESUserManager {
     }
 
     public String getCurrentUserId() {
+        mUser = getCurrentUser();
         if (mUser != null) {
             return mUser.getId() + "";
         }
-        return "0";
+        return null;
     }
 
     public void setLoginStatus(int status) {
@@ -40,12 +43,12 @@ public class ESUserManager {
     public void saveUserInfo(String user) {
         ESPreferences.saveUserInfo(user);
         mUser = ESUser.convertByJSON(user);
+        LogHelper.d(TAG, "保存登录用户信息, user:" + user);
     }
 
     public void saveUserInfo(ESUser user) {
         String userStr = ESUser.convert2JSON(user).toString();
-        ESPreferences.saveUserInfo(userStr);
-        mUser = user;
+        saveUserInfo(userStr);
     }
 
     public void logout() {

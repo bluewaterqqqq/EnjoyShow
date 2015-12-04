@@ -65,9 +65,12 @@ public class UrlBuilder {
         sb.append(BaseInfoHelper.getAndroidVersion(context));
         sb.append("&channel=");
         sb.append(getChannel());
-        sb.append("&currentUserId=");
-        String userId = ESUserManager.getInstance().getCurrentUserId();
-        sb.append(userId);
+        String userId = "";
+        if (ESUserManager.getInstance().getCurrentUserId() != null) {
+            sb.append("&currentUserId=");
+            userId = ESUserManager.getInstance().getCurrentUserId();
+            sb.append(userId);
+        }
         sb.append("&t=");
         long currentTime = System.currentTimeMillis();
         sb.append(currentTime);
