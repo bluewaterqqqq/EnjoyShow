@@ -1,5 +1,6 @@
 package com.zmdx.enjoyshow.main.publish;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -16,11 +17,8 @@ import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
-import com.zmdx.enjoyshow.network.UploadMultipartEntity;
 import com.zmdx.enjoyshow.network.UploadRequest;
 import com.zmdx.enjoyshow.network.UrlBuilder;
-import com.zmdx.enjoyshow.network.multipart.MultipartEntity;
-import com.zmdx.enjoyshow.network.multipart.UrlEncodingHelper;
 import com.zmdx.enjoyshow.utils.LogHelper;
 
 import org.json.JSONObject;
@@ -46,6 +44,7 @@ public class PublishActivity extends BaseAppCompatActivity {
 
     private List<String> mData = new ArrayList<String>();
 
+    private ProgressDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +82,20 @@ public class PublishActivity extends BaseAppCompatActivity {
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mAdapter = new SelectedImageAdapter(this, mData);
         mRecyclerView.setAdapter(mAdapter);
+
+        mDialog = new ProgressDialog(this);
+        mDialog.setCancelable(false);
+        mDialog.setMessage("发布中...");
+    }
+
+    private void dismissDialog() {
+        if (mDialog != null && mDialog.isShowing()) {
+            mDialog.dismiss();
+        }
     }
 
     private void publishImages() {
-
+        mDialog.show();
         String url = createUrl();
 
         UploadRequest request = new UploadRequest(url, new Response.Listener<JSONObject>() {
@@ -100,14 +109,14 @@ public class PublishActivity extends BaseAppCompatActivity {
                 } else {
                     Toast.makeText(PublishActivity.this, "发布失败" + response.optString("errorMsg"), Toast.LENGTH_SHORT).show();
                 }
-
+                dismissDialog();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 LogHelper.d(TAG, "onErrorResponse:" + error.toString());
                 Toast.makeText(PublishActivity.this, "发布失败", Toast.LENGTH_SHORT).show();
-
+                dismissDialog();
             }
         });
 
