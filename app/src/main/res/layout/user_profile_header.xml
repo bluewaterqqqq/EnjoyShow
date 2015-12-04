@@ -38,6 +38,7 @@
                 android:shadowColor="#b0000000"
                 android:shadowDx="3"
                 android:shadowDy="3"
+                android:shadowRadius="3"
                 android:singleLine="true"
                 android:textColor="#ffffff"
                 android:textSize="15dp" />
@@ -59,6 +60,7 @@
             android:shadowColor="#b0000000"
             android:shadowDx="3"
             android:shadowDy="3"
+            android:shadowRadius="3"
             android:singleLine="true"
             android:textColor="#ffffff"
             android:textSize="12dp" />

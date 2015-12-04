@@ -1,5 +1,6 @@
 package com.zmdx.enjoyshow.main;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,6 +19,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.zmdx.enjoyshow.ESApplication;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.entity.ESUser;
@@ -26,6 +29,7 @@ import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
 import com.zmdx.enjoyshow.user.ESUserManager;
+import com.zmdx.enjoyshow.utils.BlurUtil;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
 import com.zmdx.enjoyshow.utils.LogHelper;
@@ -161,9 +165,19 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
     }
 
     private void render() {
-        mHeadBgIv.setBackgroundColor(Color.BLACK);
         ImageLoaderManager.getImageLoader().displayImage(mUser.getHeadPortrait(), mHeadIconIv,
-                ImageLoaderOptionsUtils.getHeadImageOptions());
+                ImageLoaderOptionsUtils.getHeadImageOptions(), new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        super.onLoadingComplete(imageUri, view, loadedImage);
+                        Bitmap blurBmp = BlurUtil.fastblur(ESApplication.getInstance(), loadedImage, 20);
+                        if (blurBmp != null) {
+                            mHeadBgIv.setImageBitmap(blurBmp);
+                        } else {
+                            mHeadBgIv.setBackgroundColor(Color.BLACK);
+                        }
+                    }
+                });
         mUsernameTv.setText(mUser.getUserName());
         mAgeTv.setText(String.format("年龄: %s", mUser.getAge() + ""));
 
