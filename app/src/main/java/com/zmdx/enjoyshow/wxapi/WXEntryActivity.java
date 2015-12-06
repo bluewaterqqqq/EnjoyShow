@@ -173,7 +173,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
                 if (state == 0) {
                     String userJSON = response.optJSONObject("result").optString("user");
                     ESUser user = ESUser.convertByJSON(userJSON);
-                    ESUserManager.getInstance().saveUserInfo(user);
+                    ESUserManager.getInstance().saveUserInfo(user, false);
                     ESUserManager.getInstance().setLoginStatus(ESUserManager.STATUS_LOGIN_BY_THRID);
 
                     Toast.makeText(WXEntryActivity.this, "登录成功", Toast.LENGTH_SHORT).show();

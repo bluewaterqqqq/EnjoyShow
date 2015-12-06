@@ -1,8 +1,25 @@
 package com.zmdx.enjoyshow.user;
 
+import android.text.TextUtils;
+import android.widget.Toast;
+
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonObjectRequest;
+import com.zmdx.enjoyshow.ESApplication;
 import com.zmdx.enjoyshow.common.ESPreferences;
 import com.zmdx.enjoyshow.entity.ESUser;
+import com.zmdx.enjoyshow.network.ActionConstants;
+import com.zmdx.enjoyshow.network.RequestQueueManager;
+import com.zmdx.enjoyshow.network.UrlBuilder;
 import com.zmdx.enjoyshow.utils.LogHelper;
+
+import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * Created by zhangyan on 15/10/27.
@@ -40,15 +57,82 @@ public class ESUserManager {
         ESPreferences.saveLoginStatus(status);
     }
 
-    public void saveUserInfo(String user) {
+    public void saveUserInfo(String user, boolean syncServer) {
         ESPreferences.saveUserInfo(user);
         mUser = ESUser.convertByJSON(user);
         LogHelper.d(TAG, "保存登录用户信息, user:" + user);
+        if (syncServer) {
+            pushUserInfo2Server(mUser);
+        }
     }
 
-    public void saveUserInfo(ESUser user) {
+    private void pushUserInfo2Server(ESUser user) {
+        StringBuffer sb = new StringBuffer();
+        sb.append("?username=");
+        try {
+            String userName = URLEncoder.encode(user.getUserName(), "utf-8");
+            sb.append(userName);
+        } catch (UnsupportedEncodingException e) {
+            // ignore
+        }
+        if (!TextUtils.isEmpty(user.getAddr())) {
+            sb.append("&address=");
+            sb.append(user.getAddr());
+        }
+        if (!TextUtils.isEmpty(user.getTelephone())) {
+            sb.append("&telephone=");
+            sb.append(user.getTelephone());
+        }
+        if (!TextUtils.isEmpty(user.getRealName())) {
+            sb.append("&name=");
+            try {
+                String realName = URLEncoder.encode(user.getRealName(), "utf-8");
+                sb.append(realName);
+            } catch (UnsupportedEncodingException e) {
+                // ignore
+            }
+        }
+        if (!TextUtils.isEmpty(user.getAge())) {
+            sb.append("&age=");
+            sb.append(user.getAge());
+        }
+        if (!TextUtils.isEmpty(user.getGender())) {
+            sb.append("&gender=");
+            sb.append(user.getGender());
+        }
+        if (!TextUtils.isEmpty(user.getIntrodution())) {
+            sb.append("&introduction=");
+            sb.append(user.getIntrodution());
+        }
+
+        String url = UrlBuilder.getUrl(ActionConstants.ACTION_UPLOAD_INFO, sb.toString());
+
+        final RequestQueue requestQueue = RequestQueueManager.getRequestQueue();
+        JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                LogHelper.d(TAG, "response:" + response);
+                int state = response.optInt("state");
+                if (state == 0) {
+                    JSONObject obj = response.optJSONObject("result").optJSONObject("user");
+                    mUser = ESUser.convertByJSON(obj.toString());
+                    saveUserInfo(mUser, false);
+                    LogHelper.d(TAG, "个人信息更新成功,并同步至服务器");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                LogHelper.e(TAG, "同步个人信息失败,onErrorResponse:" + error.getMessage());
+            }
+        });
+
+        requestQueue.add(request);
+    }
+
+    public void saveUserInfo(ESUser user, boolean syncServer) {
         String userStr = ESUser.convert2JSON(user).toString();
-        saveUserInfo(userStr);
+        saveUserInfo(userStr, syncServer);
     }
 
     public void logout() {

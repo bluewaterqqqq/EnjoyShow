@@ -56,4 +56,8 @@ public class ActionConstants {
     public static final String ACTION_USER_INFO = CONTEXT + "user_loadUserInfo.action"; // 用户详情
 
     public static final String ACTION_LOAD_NOTIFY = CONTEXT + "photo_loadNotify.action"; // 通知列表
+
+    public static final String ACTION_UPLOAD_PHOTO = CONTEXT + "user_uploadPhoto.action"; // 通知列表
+
+    public static final String ACTION_UPLOAD_INFO = CONTEXT + "user_perfectInformation.action"; // 通知列表
 }

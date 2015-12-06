@@ -43,6 +43,11 @@
 
         <activity android:name="me.iwf.photopicker.PhotoPagerActivity" />
         <activity android:name=".main.login.LoginRegistActivity" />
+        <activity android:name=".main.settings.SettingsActivity" />
+        <activity android:name=".main.settings.MyProfileActivity" />
+        <activity
+            android:name=".main.settings.RealVerifyActivity"
+            android:theme="@style/AppTheme_Light" />
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
@@ -52,6 +57,11 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
+        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

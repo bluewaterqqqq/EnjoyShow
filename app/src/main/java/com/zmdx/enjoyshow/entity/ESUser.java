@@ -28,6 +28,7 @@ public class ESUser implements Serializable {
     private String isValidate;
     private String telephone;
     private boolean isAttention;
+    private String realName;
 
     public static ESUser convertByJSON(String user) {
         ESUser esUser = new ESUser();
@@ -49,6 +50,7 @@ public class ESUser implements Serializable {
             esUser.setIsAttention(obj.optInt("isAttention") == 1);
             esUser.setIsValidate(obj.optString("isvalidate"));
             esUser.setIntrodution(obj.optString("introduction"));
+            esUser.setRealName(obj.optString("name"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -78,10 +80,27 @@ public class ESUser implements Serializable {
             obj.put("headPortrait", user.getHeadPortrait());
             obj.put("id", user.getId());
             obj.put("username", user.getUserName());
+            obj.put("name", user.getRealName());
+            obj.put("age", user.getAge());
+            obj.put("address", user.getAddr());
+            obj.put("loginame", user.getLoginName());
+            obj.put("introduction", user.getIntrodution());
+            obj.put("isvalidate", user.getIsValidate());
+            obj.put("orgId", user.getOrgId());
+            obj.put("praise", user.getPraise());
+            obj.put("report", user.getReport());
         } catch (JSONException e) {
             // ignore
         }
         return obj;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
     public String getIsValidate() {

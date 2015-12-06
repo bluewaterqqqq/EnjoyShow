@@ -1,5 +1,6 @@
 package com.zmdx.enjoyshow.main;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import com.zmdx.enjoyshow.ESApplication;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.main.profile.ProfilePagerAdpater;
+import com.zmdx.enjoyshow.main.settings.MyProfileActivity;
+import com.zmdx.enjoyshow.main.settings.SettingsActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
@@ -33,6 +36,10 @@ import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
 import com.zmdx.enjoyshow.utils.LogHelper;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import me.iwf.photopicker.PhotoPagerActivity;
 
 /**
  * Created by zhangyan on 15/10/26.
@@ -158,12 +165,13 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
         if (mUser == null) {
             return;
         }
+        mHeadIconIv.setOnClickListener(this);
         ImageLoaderManager.getImageLoader().displayImage(mUser.getHeadPortrait(), mHeadIconIv,
                 ImageLoaderOptionsUtils.getHeadImageOptions(), new SimpleImageLoadingListener() {
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         super.onLoadingComplete(imageUri, view, loadedImage);
-                        Bitmap blurBmp = BlurUtil.fastblur(ESApplication.getInstance(), loadedImage, 20);
+                        Bitmap blurBmp = BlurUtil.fastblur(ESApplication.getInstance(), loadedImage, 15);
                         if (blurBmp != null) {
                             mHeadBgIv.setImageBitmap(blurBmp);
                         } else {
@@ -226,9 +234,23 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if (v == mSettingsBtn) {
-            // TODO
+            getActivity().startActivity(new Intent(getActivity(), SettingsActivity.class));
         } else if (v == mHeadIconIv) {
-            // TODO
+            if (mUser != null) {
+                if (mIsMine) {
+                    Intent in = new Intent(getActivity(), MyProfileActivity.class);
+                    in.putExtra("user", mUser);
+                    getActivity().startActivity(in);
+                } else {
+                    ArrayList<String> data = new ArrayList<String>();
+                    data.add(mUser.getHeadPortrait());
+                    Intent intent = new Intent(getActivity(), PhotoPagerActivity.class);
+                    intent.putExtra(PhotoPagerActivity.EXTRA_CURRENT_ITEM, 0);
+                    intent.putExtra(PhotoPagerActivity.EXTRA_PHOTOS, data);
+                    intent.putExtra(PhotoPagerActivity.EXTRA_SHOW_DELETE, false);
+                    startActivity(intent);
+                }
+            }
         } else if (v == mFollowBtn) {
             if (mUser.isAttention()) {
                 cancelAttention();

@@ -4,9 +4,9 @@
 package com.zmdx.enjoyshow.network;
 
 
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.SystemClock;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.ExecutorDelivery;
@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.error.AuthFailureError;
+import com.android.volley.toolbox.multipart.BitmapPart;
 import com.android.volley.toolbox.multipart.FilePart;
 import com.android.volley.toolbox.multipart.StringPart;
 import com.zmdx.enjoyshow.utils.LogHelper;
@@ -103,6 +104,11 @@ public abstract class MultiPartRequest<T> extends Request<T> {
 
     public void addPart(String key, File file) {
         FilePart part = new FilePart(key, file, null, null);
+        mMultipartEntity.addPart(part);
+    }
+
+    public void addPart(String key, Bitmap bmp) {
+        BitmapPart part = new BitmapPart(key, bmp);
         mMultipartEntity.addPart(part);
     }
 

@@ -1,11 +1,15 @@
 package com.zmdx.enjoyshow;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTabHost;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +22,7 @@ import com.zmdx.enjoyshow.main.Fragment2;
 import com.zmdx.enjoyshow.main.Fragment4;
 import com.zmdx.enjoyshow.main.Fragment5;
 import com.zmdx.enjoyshow.main.publish.PublishActivity;
+import com.zmdx.enjoyshow.main.settings.SettingsActivity;
 
 /**
  * Created by zhangyan on 15/10/26.
@@ -36,13 +41,26 @@ public class MainActivity extends BaseAppCompatActivity implements TabHost.OnTab
 
     private Toolbar mToolbar;
 
+    private BroadcastReceiver mFinishReceiver = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (SettingsActivity.ACTION_FINISH_ALL_ACTIVITY.equals(action)) {
+                finish();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
-
         setTitle("照片墙");
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mFinishReceiver,
+                new IntentFilter(SettingsActivity.ACTION_FINISH_ALL_ACTIVITY));
     }
 
     private void initView() {
@@ -168,5 +186,11 @@ public class MainActivity extends BaseAppCompatActivity implements TabHost.OnTab
             }
             setTitle("个人主页");
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mFinishReceiver);
     }
 }

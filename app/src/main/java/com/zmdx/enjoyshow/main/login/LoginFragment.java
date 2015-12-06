@@ -101,7 +101,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(getActivity(), "登录成功", Toast.LENGTH_SHORT).show();
                     JSONObject obj = response.optJSONObject("result");
                     String user = obj.optString("user");
-                    ESUserManager.getInstance().saveUserInfo(user);
+                    ESUserManager.getInstance().saveUserInfo(user, false);
                     ESUserManager.getInstance().setLoginStatus(ESUserManager.STATUS_LOGIN_BY_ES);
                     startMainActivity();
                     finish();
