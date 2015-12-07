@@ -71,6 +71,7 @@ public class ESThemeDetailInfo implements Serializable {
         result.setUserRankList(ESUser.convertByJSONArray(json.optJSONArray("userRank")));
         result.setUserAttented(json.optInt("isUserAttented") == 1); // 0未参加, 1已参加
         result.setLeftVotes(json.optInt("votes"));
+        result.setmTheme(ESTheme.convertByJSON(json.optJSONObject("theme")));
         return result;
     }
 }

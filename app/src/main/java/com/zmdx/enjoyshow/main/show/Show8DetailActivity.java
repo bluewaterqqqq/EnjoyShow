@@ -20,12 +20,14 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
+import com.zmdx.enjoyshow.entity.ESBullet;
 import com.zmdx.enjoyshow.entity.ESTheme;
 import com.zmdx.enjoyshow.entity.ESThemeDetailInfo;
 import com.zmdx.enjoyshow.main.show.detail.Show8DetailPagerAdpater;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
+import com.zmdx.enjoyshow.protocol.VShowParser;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
 import com.zmdx.enjoyshow.utils.LogHelper;
@@ -42,13 +44,13 @@ public class Show8DetailActivity extends BaseAppCompatActivity {
 
     private static final String TAG = "Show8DetailActivity";
 
-    private ESTheme mThemeData;
-
     private ESThemeDetailInfo mDetailData;
 
     private ViewPager mPager;
 
     private Show8DetailPagerAdpater mAdapter;
+
+    private String mThemeId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,13 +58,17 @@ public class Show8DetailActivity extends BaseAppCompatActivity {
         setContentView(R.layout.show8_detail);
         Intent from = getIntent();
         if (from != null) {
-            mThemeData = (ESTheme) from.getSerializableExtra("themeData");
+//            ESBullet bullet = (ESBullet) from.getSerializableExtra("themeData");
+//            mThemeId = VShowParser.parseThemeIdBy(bullet.getUrl());
+            mThemeId = from.getStringExtra("themeId");
+            if (mThemeId == null) {
+                finish();
+                return;
+            }
         } else {
             finish();
             return;
         }
-        // 初始化tab之上部分的界面
-        initBaseViews(mThemeData);
 
         // 拉取3个tab页的数据
         pullData();
@@ -80,6 +86,8 @@ public class Show8DetailActivity extends BaseAppCompatActivity {
                 if (mDetailData == null) {
                     return;
                 }
+                // 初始化tab之上部分的界面
+                initBaseViews(mDetailData.getmTheme());
                 initContent();
             }
         }, new Response.ErrorListener() {
@@ -105,15 +113,14 @@ public class Show8DetailActivity extends BaseAppCompatActivity {
         // init tab views
         TabLayout tab = (TabLayout) findViewById(R.id.themeDetail_tabLayout);
         mPager = (ViewPager) findViewById(R.id.themeDetail_pager);
-        mDetailData.setmTheme(mThemeData);
         mAdapter = new Show8DetailPagerAdpater(getSupportFragmentManager(), this, mDetailData);
         mPager.setAdapter(mAdapter);
         tab.setupWithViewPager(mPager);
     }
 
     private String createUrl() {
-        String params = "?themeCycleId=" + mThemeData.getmId() +
-                        "&limit=15";
+        String params = "?themeCycleId=" + mThemeId +
+                "&limit=15";
         return UrlBuilder.getUrl(ActionConstants.ACTION_THEME_DETAIL, params);
     }
 
@@ -158,7 +165,7 @@ public class Show8DetailActivity extends BaseAppCompatActivity {
 
                 TextView awardTv = (TextView) dialogView.findViewById(R.id.show8_detail_award);
                 awardTv.setText(data.getAwardSetting());
-                new AlertDialog.Builder(Show8DetailActivity.this,android.R.style.Theme_DeviceDefault_Light_Dialog_Alert).setView(dialogView).setPositiveButton("关闭", new DialogInterface.OnClickListener() {
+                new AlertDialog.Builder(Show8DetailActivity.this, android.R.style.Theme_DeviceDefault_Light_Dialog_Alert).setView(dialogView).setPositiveButton("关闭", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -168,9 +175,9 @@ public class Show8DetailActivity extends BaseAppCompatActivity {
         });
     }
 
-    public static void start(Context context, ESTheme data) {
+    public static void start(Context context, String themeId) {
         Intent in = new Intent(context, Show8DetailActivity.class);
-        in.putExtra("themeData", data);
+        in.putExtra("themeId", themeId);
         context.startActivity(in);
     }
 }

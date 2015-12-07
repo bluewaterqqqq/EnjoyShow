@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,16 +81,20 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
 
     private String mUserId;
 
+    private boolean mShowBack = false;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
             mUserId = bundle.getString("userId");
+            mShowBack = bundle.getBoolean("back", true);
             mIsMine = mUserId.equals(ESUserManager.getInstance().getCurrentUserId());
         } else { // 首页进入第5个tab,一定是用户本人的个人信息页,所以取登录用户的信息
             mUserId = ESUserManager.getInstance().getCurrentUserId();
             needShowSettings = true;
+            mShowBack = false;
             mIsMine = true;
         }
     }
@@ -203,6 +208,19 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
     }
 
     private void initViews(View view) {
+        if (mShowBack) {
+            Toolbar tb = (Toolbar) view.findViewById(R.id.toolbar);
+            final AppCompatActivity activity = (AppCompatActivity) getActivity();
+            activity.setSupportActionBar(tb);
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            tb.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity.finish();
+                }
+            });
+        }
+
         mHeadBgIv = (ImageView) view.findViewById(R.id.profile_head_bg);
         mHeadIconIv = (ImageView) view.findViewById(R.id.profile_headIcon);
         mUsernameTv = (TextView) view.findViewById(R.id.profile_username);

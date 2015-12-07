@@ -136,12 +136,12 @@ public class PicRecommendFragment extends Fragment implements IRefreshListener {
                     if (order) {
                         mAdapter.appendData(data);
                         // 更新lastId
-                        mLastId = data.get(data.size() - 1).getOrderId();
                     } else {
                         mPics.clear();
                         mPics.addAll(data);
                         mAdapter.notifyDataSetChanged();
                     }
+                    mLastId = data.get(data.size() - 1).getOrderId();
 
                 }
             }

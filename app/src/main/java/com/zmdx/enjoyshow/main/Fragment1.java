@@ -8,6 +8,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,14 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
+import com.zmdx.enjoyshow.entity.ESBullet;
 import com.zmdx.enjoyshow.entity.ESTheme;
 import com.zmdx.enjoyshow.main.pic.PicFragmentPagerAdpater;
 import com.zmdx.enjoyshow.main.show.Show8DetailActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
+import com.zmdx.enjoyshow.protocol.VShowParser;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
 import com.zmdx.enjoyshow.utils.LogHelper;
@@ -32,6 +35,7 @@ import com.zmdx.enjoyshow.utils.LogHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +56,7 @@ public class Fragment1 extends BaseFragment {
 
     private TopPagerAdapter mTopAdapter;
 
-    private ArrayList<ESTheme> mTopList = new ArrayList<ESTheme>();
+    private ArrayList<ESBullet> mTopList = new ArrayList<ESBullet>();
 
     private ViewPager mTopPager;
 
@@ -108,12 +112,16 @@ public class Fragment1 extends BaseFragment {
             public void onResponse(JSONObject response) {
                 mPulling = false;
                 LogHelper.d(TAG, "response:" + response);
-                List<ESTheme> data = parseResponse2Data(response);
-                if (data != null && data.size() > 0) {
-                    mTopList.addAll(data);
-                    initDotContainer();
-                    mTopAdapter.notifyDataSetChanged();
-                    mTopPager.setCurrentItem(0);
+                int state = response.optInt("state");
+                if (state == 0) {
+                    ArrayList<ESBullet> data = ESBullet.convertByJson(response.optJSONObject("result").optJSONArray("bulletinList"));
+                    if (data != null && data.size() > 0) {
+                        mTopList.clear();
+                        mTopList.addAll(data);
+                        initDotContainer();
+                        mTopAdapter.notifyDataSetChanged();
+                        mTopPager.setCurrentItem(0);
+                    }
                 }
             }
         }, new Response.ErrorListener() {
@@ -125,7 +133,6 @@ public class Fragment1 extends BaseFragment {
         });
 
         requestQueue.add(request);
-
     }
 
     private void initDotContainer() {
@@ -144,30 +151,8 @@ public class Fragment1 extends BaseFragment {
         updateDot(0);
     }
 
-    private List<ESTheme> parseResponse2Data(JSONObject response) {
-        List<ESTheme> list = null;
-        if (response != null) {
-            int state = -1;
-            try {
-                state = response.getInt("state");
-                if (state == 0) {
-                    JSONObject result = response.getJSONObject("result");
-                    JSONArray data = result.optJSONArray("themeCycle");
-                    if (data != null) {
-                        list = new ArrayList<ESTheme>();
-                        list.addAll(ESTheme.convertListByJSON(data));
-                    }
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-        return list;
-    }
-
     private String createUrl() {
-        return UrlBuilder.getUrl(ActionConstants.ACTION_QUERY_THEME, "?limit=4");
+        return UrlBuilder.getUrl(ActionConstants.ACTION_QUERY_PHOTO_WALL, "?limit=1&category=1");
 
     }
 
@@ -213,14 +198,18 @@ public class Fragment1 extends BaseFragment {
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
             ImageView view = (ImageView) mInflater.inflate(R.layout.top_pager_item, container, false);
-            ImageLoaderManager.getImageLoader().displayImage(mTopList.get(position).getmBgUrl(), view, ImageLoaderOptionsUtils.getCoverImageOptions());
+            ImageLoaderManager.getImageLoader().displayImage(mTopList.get(position).getImageUrl(), view, ImageLoaderOptionsUtils.getCoverImageOptions());
             container.addView(view);
             view.setTag(position);
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = (Integer) v.getTag();
-                    Show8DetailActivity.start(v.getContext(), mTopList.get(position));
+                    ESBullet esb = mTopList.get(position);
+                    String themeId = VShowParser.parseThemeIdBy(esb.getUrl());
+                    if (!TextUtils.isEmpty(themeId)) {
+                        Show8DetailActivity.start(v.getContext(), themeId);
+                    }
                 }
             });
             return view;

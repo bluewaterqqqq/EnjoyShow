@@ -35,6 +35,7 @@ public class UserProfileActivity extends AppCompatActivity {
         Fragment frag = new TAProfileFragment();
         Bundle bundle = new Bundle();
         bundle.putString("userId", mUserId);
+        bundle.putBoolean("back", true);
         frag.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.profile_container, frag).commit();
     }

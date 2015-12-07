@@ -146,11 +146,10 @@ public class DetectNewestFragment extends Fragment implements SwipeRefreshLayout
                     if (older) {
                         mAdapter.appendData(data);
                         // 更新lastId
-                        mLastId = data.get(data.size() - 1).getOrderId();
                     } else {
                         mAdapter.insertDataAtHeader(data);
                     }
-
+                    mLastId = data.get(data.size() - 1).getOrderId();
                 }
             }
         }, new Response.ErrorListener() {

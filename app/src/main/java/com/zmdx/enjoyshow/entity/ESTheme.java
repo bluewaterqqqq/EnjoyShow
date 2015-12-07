@@ -175,23 +175,7 @@ public class ESTheme implements Serializable {
         try {
             for (int i = 0; i < data.length(); i++) {
                 JSONObject obj = data.getJSONObject(i);
-
-                ESTheme theme = new ESTheme();
-                theme.setmBgUrl(obj.optString("bgUrl"));
-                theme.setmDesc(obj.optString("descs"));
-                theme.setmDetailImageUrl(obj.optString("detailImageUrl"));
-                theme.setmEndTime(obj.optLong("endtime"));
-                theme.setmId(obj.optString("id"));
-                theme.setmInsideDetailImageUrl("insideDetailImageUrl");
-                theme.setNeedValidate(obj.optString("isNeedValidate").equals("0")); // 0是需要,1是不需要
-                theme.setmStartTime(obj.optLong("starttime"));
-                theme.setmStatus(obj.optString("status")); // 0结束,1进行中,2开始
-                theme.setmTag(obj.optString("tag"));
-                theme.setmTitle(obj.optString("themeTitle"));
-                theme.setAwardSetting(obj.optString("awardSetting"));
-                theme.setRule(obj.optString("role"));
-                theme.setNotice(obj.optString("notice"));
-                theme.setInsideBgUrl(obj.optString("insideBgUrl"));
+                ESTheme theme = convertByJSON(obj);
                 list.add(theme);
             }
         } catch (JSONException e) {
@@ -199,5 +183,25 @@ public class ESTheme implements Serializable {
         }
 
         return list;
+    }
+
+    public static ESTheme convertByJSON(JSONObject obj) {
+        ESTheme theme = new ESTheme();
+        theme.setmBgUrl(obj.optString("bgUrl"));
+        theme.setmDesc(obj.optString("descs"));
+        theme.setmDetailImageUrl(obj.optString("detailImageUrl"));
+        theme.setmEndTime(obj.optLong("endtime"));
+        theme.setmId(obj.optString("id"));
+        theme.setmInsideDetailImageUrl("insideDetailImageUrl");
+        theme.setNeedValidate(obj.optString("isNeedValidate").equals("0")); // 0是需要,1是不需要
+        theme.setmStartTime(obj.optLong("starttime"));
+        theme.setmStatus(obj.optString("status")); // 0结束,1进行中,2开始
+        theme.setmTag(obj.optString("tag"));
+        theme.setmTitle(obj.optString("themeTitle"));
+        theme.setAwardSetting(obj.optString("awardSetting"));
+        theme.setRule(obj.optString("role"));
+        theme.setNotice(obj.optString("notice"));
+        theme.setInsideBgUrl(obj.optString("insideBgUrl"));
+        return theme;
     }
 }

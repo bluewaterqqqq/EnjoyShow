@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by baidu on 15/11/27.
+ * Created by zhangyan on 15/11/27.
  */
 public class Show8Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
@@ -59,7 +59,7 @@ public class Show8Adapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     @Override
     public void onClick(View v) {
         ESTheme data = (ESTheme) v.getTag();
-        Show8DetailActivity.start(v.getContext(), data);
+        Show8DetailActivity.start(v.getContext(), data.getmId());
     }
 
     public static class Show8Holder extends RecyclerView.ViewHolder {
