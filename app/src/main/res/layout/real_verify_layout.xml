@@ -37,6 +37,7 @@
             android:layout_height="60dp">
 
             <EditText
+                android:id="@+id/real_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="请输入真实姓名" />

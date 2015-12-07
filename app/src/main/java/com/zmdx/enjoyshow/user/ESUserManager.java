@@ -1,13 +1,11 @@
 package com.zmdx.enjoyshow.user;
 
 import android.text.TextUtils;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
-import com.zmdx.enjoyshow.ESApplication;
 import com.zmdx.enjoyshow.common.ESPreferences;
 import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.network.ActionConstants;
@@ -16,7 +14,6 @@ import com.zmdx.enjoyshow.network.UrlBuilder;
 import com.zmdx.enjoyshow.utils.LogHelper;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -71,13 +68,20 @@ public class ESUserManager {
         sb.append("?username=");
         try {
             String userName = URLEncoder.encode(user.getUserName(), "utf-8");
-            sb.append(userName);
+            String newName = URLEncoder.encode(userName, "utf-8");
+            sb.append(newName);
         } catch (UnsupportedEncodingException e) {
             // ignore
         }
         if (!TextUtils.isEmpty(user.getAddr())) {
             sb.append("&address=");
-            sb.append(user.getAddr());
+            try {
+                String addr = URLEncoder.encode(user.getAddr(), "utf-8");
+                String newaddr = URLEncoder.encode(addr, "utf-8");
+                sb.append(newaddr);
+            } catch (UnsupportedEncodingException e) {
+                // ignore
+            }
         }
         if (!TextUtils.isEmpty(user.getTelephone())) {
             sb.append("&telephone=");
@@ -87,7 +91,8 @@ public class ESUserManager {
             sb.append("&name=");
             try {
                 String realName = URLEncoder.encode(user.getRealName(), "utf-8");
-                sb.append(realName);
+                String newName = URLEncoder.encode(realName, "utf-8");
+                sb.append(newName);
             } catch (UnsupportedEncodingException e) {
                 // ignore
             }
@@ -102,6 +107,13 @@ public class ESUserManager {
         }
         if (!TextUtils.isEmpty(user.getIntrodution())) {
             sb.append("&introduction=");
+            try {
+                String indro = URLEncoder.encode(user.getIntrodution(), "utf-8");
+                String newIndro = URLEncoder.encode(indro, "utf-8");
+                sb.append(newIndro);
+            } catch (UnsupportedEncodingException e) {
+                // ignore
+            }
             sb.append(user.getIntrodution());
         }
 
@@ -148,12 +160,5 @@ public class ESUserManager {
             }
         }
         return mUser;
-//        ESUser user = new ESUser();
-//        user.setHeadPortrait(
-//                "http://wx.qlogo"
-//                        + ".cn/mmopen/eZbpr3s49Ws8j2FVkJGV3miad5W1hQPBoEZ549WHNZX0htO7zZlbYMlgKFOal7Ue2RcLy1Eu0151sAvXfdTibK5iawY5NK3YVAP/0");
-//        user.setUserName("至美");
-//        user.setId(0);
-//        return user;
     }
 }

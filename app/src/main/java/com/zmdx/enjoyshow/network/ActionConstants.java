@@ -57,7 +57,9 @@ public class ActionConstants {
 
     public static final String ACTION_LOAD_NOTIFY = CONTEXT + "photo_loadNotify.action"; // 通知列表
 
-    public static final String ACTION_UPLOAD_PHOTO = CONTEXT + "user_uploadPhoto.action"; // 通知列表
+    public static final String ACTION_UPLOAD_PHOTO = CONTEXT + "user_uploadPhoto.action"; // 上传个人信息的头像
 
-    public static final String ACTION_UPLOAD_INFO = CONTEXT + "user_perfectInformation.action"; // 通知列表
+    public static final String ACTION_UPLOAD_INFO = CONTEXT + "user_perfectInformation.action"; // 更新个人信息
+
+    public static final String ACTION_UPLOAD_REAL = CONTEXT + "photo_realityVerification.action"; // 上传真人验证头像
 }
