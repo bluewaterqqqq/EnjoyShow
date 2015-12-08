@@ -6,6 +6,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.Volley;
 import com.zmdx.enjoyshow.BuildConfig;
+import com.zmdx.enjoyshow.common.ESConfig;
 
 /**
  * Created by zhangyan on 15/10/27.
@@ -24,7 +25,7 @@ public class RequestQueueManager {
      * @param ctx
      */
     public static void init(Context ctx) {
-        VolleyLog.DEBUG = BuildConfig.DEBUG;
+        VolleyLog.DEBUG = ESConfig.DEBUG;
         sRequestQueue = Volley.newRequestQueue(ctx);
     }
 
