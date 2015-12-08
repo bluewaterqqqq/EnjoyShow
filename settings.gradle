@@ -1,3 +1,1 @@
-include ':app', ':PhotoPicker', ':volley'
-//include ':Swipecards'
-//include ':AndTinder'
+include ':app', ':PhotoPicker', ':volley', ':jpushexample'

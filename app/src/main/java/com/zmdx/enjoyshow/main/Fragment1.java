@@ -21,24 +21,19 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.entity.ESBullet;
-import com.zmdx.enjoyshow.entity.ESTheme;
 import com.zmdx.enjoyshow.main.pic.PicFragmentPagerAdpater;
 import com.zmdx.enjoyshow.main.show.Show8DetailActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
-import com.zmdx.enjoyshow.protocol.VShowParser;
+import com.zmdx.enjoyshow.protocol.VShowUri;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
 import com.zmdx.enjoyshow.utils.LogHelper;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by zhangyan on 15/10/26.
@@ -206,7 +201,14 @@ public class Fragment1 extends BaseFragment {
                 public void onClick(View v) {
                     int position = (Integer) v.getTag();
                     ESBullet esb = mTopList.get(position);
-                    String themeId = VShowParser.parseThemeIdBy(esb.getUrl());
+                    String themeId = "";
+                    try {
+                        VShowUri uri = new VShowUri().parse(esb.getUrl());
+                        themeId = uri.getmValue();
+                    } catch (VShowUri.VShowParserException e) {
+                        return;
+                    }
+
                     if (!TextUtils.isEmpty(themeId)) {
                         Show8DetailActivity.start(v.getContext(), themeId);
                     }

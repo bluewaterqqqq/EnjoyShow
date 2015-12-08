@@ -20,14 +20,12 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
-import com.zmdx.enjoyshow.entity.ESBullet;
 import com.zmdx.enjoyshow.entity.ESTheme;
 import com.zmdx.enjoyshow.entity.ESThemeDetailInfo;
 import com.zmdx.enjoyshow.main.show.detail.Show8DetailPagerAdpater;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
-import com.zmdx.enjoyshow.protocol.VShowParser;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
 import com.zmdx.enjoyshow.utils.LogHelper;
@@ -59,7 +57,7 @@ public class Show8DetailActivity extends BaseAppCompatActivity {
         Intent from = getIntent();
         if (from != null) {
 //            ESBullet bullet = (ESBullet) from.getSerializableExtra("themeData");
-//            mThemeId = VShowParser.parseThemeIdBy(bullet.getUrl());
+//            mThemeId = VShowUri.parseThemeIdBy(bullet.getUrl());
             mThemeId = from.getStringExtra("themeId");
             if (mThemeId == null) {
                 finish();

@@ -132,6 +132,12 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
             public void onResponse(JSONObject response) {
                 mPulling = false;
                 LogHelper.d(TAG, "response:" + response);
+                int state = response.optInt("state");
+                if (state == 1) {
+                    Toast.makeText(ImageDetailActivity.this, "图集不存在", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
                 mData = parseResponse2Data(response);
                 if (mData != null) {
                     render(mData);
