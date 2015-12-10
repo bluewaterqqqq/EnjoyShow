@@ -18,3 +18,19 @@
 -keep class com.tencent.mm.sdk.** {
    *;
 }
+
+-allowaccessmodification
+
+#-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+
+# for online/offline server check utility
+-keepattributes *Annotation*
+-keep public class * extends android.support.design.widget.CoordinatorLayout.Behavior { *; }
+-keep public class * extends android.support.design.widget.ViewOffsetBehavior { *; }
+-dontwarn org.apache.http.**
+-dontwarn android.net.http.AndroidHttpClient
+-dontwarn com.google.android.gms.**
+-dontwarn com.android.volley.toolbox.**
+-dontwarn android.net.SSLCertificateSocketFactory
+-dontwarn com.google.gson.**

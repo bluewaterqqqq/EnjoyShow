@@ -168,7 +168,7 @@ public class UserFollowedFragment extends Fragment {
 
     protected Map<String, String> getParams() {
         Map<String, String> params = new HashMap<>();
-        params.put("currentUserId", mUserId);
+        params.put("userId", mUserId);
         return params;
     }
 
