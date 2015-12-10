@@ -64,7 +64,7 @@ public class ESPhotoSet {
             photo.setPraiseList(ESUser.convertByJSONArray(obj.optJSONArray("praiseUserList")));
         }
         photo.setComments(ESComment.convertByJSON(result.optString("comments")));
-        if (ESConfig.DEBUG && (photo.getComments() == null || photo.getComments().size() <= 0)) {
+        if (false && (photo.getComments() == null || photo.getComments().size() <= 0)) {
             List<ESComment> list = new ArrayList<ESComment>();
             int i = 10;
             while (true) {

@@ -15,6 +15,7 @@ import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
+import com.zmdx.enjoyshow.entity.ESTheme;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UploadRequest;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.iwf.photopicker.PhotoPickerActivity;
+import me.iwf.photopicker.utils.PhotoPickerIntent;
 
 /**
  * Created by zhangyan on 15/12/1.
@@ -46,11 +48,30 @@ public class PublishActivity extends BaseAppCompatActivity {
 
     private ProgressDialog mDialog;
 
+    /**
+     * 0个人(默认) 1秀场
+     */
+    private int mType = 0;
+
+    private ESTheme mTheme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent in = getIntent();
+        if (in != null) {
+            mType = in.getIntExtra("type", 0);
+            mTheme = (ESTheme) in.getSerializableExtra("theme");
+        }
+
+        LogHelper.d(TAG, "type=" + mType + ", mThemeId:" + mTheme.getmId() + ",mThemeTitle:" + mTheme.getmTitle());
         setContentView(R.layout.publish_layout);
         initView();
+
+        PhotoPickerIntent intent = new PhotoPickerIntent(this);
+        intent.setPhotoCount(9 - Math.max(0, mData.size() - 1));
+        startActivityForResult(intent, SelectedImageAdapter.REQUEST_CODE);
     }
 
     private void initView() {
@@ -106,6 +127,7 @@ public class PublishActivity extends BaseAppCompatActivity {
                 if (state == 0) {
                     Toast.makeText(PublishActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
                     finish();
+                    setResult(RESULT_OK);
                 } else {
                     Toast.makeText(PublishActivity.this, "发布失败" + response.optString("errorMsg"), Toast.LENGTH_SHORT).show();
                 }
@@ -126,7 +148,13 @@ public class PublishActivity extends BaseAppCompatActivity {
             }
         }
         request.addPart("descs", mInputEt.getText().toString());
-        request.addPart("type", "0");
+        if (mType == 0) {
+            request.addPart("type", "0");
+        } else if (mType == 1) {
+            request.addPart("type", "1");
+            request.addPart("themeCycleId", mTheme.getmId());
+            request.addPart("themeTitle", mTheme.getmTitle());
+        }
         RequestQueueManager.getRequestQueue().add(request);
     }
 

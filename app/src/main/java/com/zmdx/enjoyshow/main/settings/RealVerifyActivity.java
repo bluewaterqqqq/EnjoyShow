@@ -5,9 +5,11 @@ package com.zmdx.enjoyshow.main.settings;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +26,7 @@ import com.zmdx.enjoyshow.ESApplication;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
 import com.zmdx.enjoyshow.entity.ESUser;
+import com.zmdx.enjoyshow.main.show.Show8DetailActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UploadRequest;
@@ -42,6 +45,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import me.iwf.photopicker.PhotoPickerActivity;
 import me.iwf.photopicker.utils.PhotoPickerIntent;
 
@@ -59,7 +63,7 @@ public class RealVerifyActivity extends BaseAppCompatActivity implements View.On
 
     private File mHeadFile;
 
-    private ProgressDialog mDialog;
+    private SweetAlertDialog mDialog;
 
     private ESUser mUser;
 
@@ -87,13 +91,22 @@ public class RealVerifyActivity extends BaseAppCompatActivity implements View.On
             }
         });
 
+        mUser = ESUserManager.getInstance().getCurrentUser();
+
         mRealNameEt = (EditText) findViewById(R.id.real_name);
+        mUser.setRealName(mUser.getRealName());
 
         mAddrEt = (EditText) findViewById(R.id.real_addr);
+        mAddrEt.setText(mUser.getAddr());
 
         mTeleEt = (EditText) findViewById(R.id.real_tel);
+        mTeleEt.setText(mUser.getTelephone());
 
         mRealHeadIv = (ImageView) findViewById(R.id.real_head);
+        if (!TextUtils.isEmpty(mUser.getHeadPortrait())) {
+            ImageLoaderManager.getImageLoader().displayImage(mUser.getHeadPortrait(), mRealHeadIv, ImageLoaderOptionsUtils.getCoverImageOptions());
+            mHeadChanged = true;
+        }
 
         mRealHeadIv.setOnClickListener(this);
 
@@ -105,10 +118,10 @@ public class RealVerifyActivity extends BaseAppCompatActivity implements View.On
 
         mSaveBtn.setOnClickListener(this);
 
-        mDialog = new ProgressDialog(this);
+        mDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        mDialog.getProgressHelper().setBarColor(getResources().getColor(R.color.colorPrimary));
+        mDialog.setTitleText("Loading");
         mDialog.setCancelable(false);
-        mDialog.setMessage("loading...");
-        mUser = ESUserManager.getInstance().getCurrentUser();
     }
 
     @Override
@@ -258,5 +271,10 @@ public class RealVerifyActivity extends BaseAppCompatActivity implements View.On
             }
         });
         builder.create().show();
+    }
+
+    public static void start(Context activity) {
+        Intent in = new Intent(activity, RealVerifyActivity.class);
+        activity.startActivity(in);
     }
 }

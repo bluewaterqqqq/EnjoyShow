@@ -60,7 +60,6 @@ public class Show8HotestFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         mData = (ArrayList<ESPhoto>) bundle.getSerializable("data");
-        LogHelper.d(TAG, "data size:" + mData.size());
         if (mData != null) {
             if (mData.size() > 0) {
                 mLastId = mData.get(mData.size() - 1).getOrderId();

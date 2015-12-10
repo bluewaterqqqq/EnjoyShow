@@ -3,11 +3,10 @@
  */
 package com.zmdx.enjoyshow.main.settings;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,6 +48,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import me.drakeet.materialdialog.MaterialDialog;
 import me.iwf.photopicker.PhotoPickerActivity;
 import me.iwf.photopicker.utils.PhotoPickerIntent;
 
@@ -80,7 +81,7 @@ public class MyProfileActivity extends BaseAppCompatActivity implements View.OnC
 
     private ESUser mUser;
 
-    private ProgressDialog mDialog;
+    private SweetAlertDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,9 +101,9 @@ public class MyProfileActivity extends BaseAppCompatActivity implements View.OnC
 
         render();
 
-        mDialog = new ProgressDialog(this);
+        mDialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
         mDialog.setCancelable(false);
-        mDialog.setMessage("更新头像中...");
+        mDialog.setContentText("更新头像中...");
     }
 
     private void render() {
@@ -125,8 +126,12 @@ public class MyProfileActivity extends BaseAppCompatActivity implements View.OnC
         String realStatus = mUser.getIsValidate();
         if (realStatus.equals("0")) {
             realStr = "未验证";
-        } else {
+        } else if (realStatus.equals("1")) {
             realStr = "已验证";
+        } else if (realStatus.equals("2")) {
+            realStr = "验证失败";
+        } else if (realStatus.equals("3")) {
+            realStr = "审核中";
         }
         mRealVerifyStatusTv.setText(realStr);
     }
@@ -149,6 +154,8 @@ public class MyProfileActivity extends BaseAppCompatActivity implements View.OnC
         mSexNameTv = (TextView) findViewById(R.id.my_sex);
         mAgeTv = (TextView) findViewById(R.id.my_age);
         mRealVerifyStatusTv = (TextView) findViewById(R.id.my_realVerify);
+
+
     }
 
     private void initToolbar() {
@@ -175,9 +182,11 @@ public class MyProfileActivity extends BaseAppCompatActivity implements View.OnC
         } else if (v == mNickLayout) {
             View view = LayoutInflater.from(this).inflate(R.layout.input_dialog_layout, null);
             final EditText input = (EditText) view.findViewById(R.id.modify_nick);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert).setCancelable(true).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            final MaterialDialog dialog = new MaterialDialog(this);
+            dialog.setContentView(view);
+            dialog.setPositiveButton("确定", new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(View v) {
                     String str = input.getText().toString();
                     if (TextUtils.isEmpty(str)) {
                         return;
@@ -187,13 +196,14 @@ public class MyProfileActivity extends BaseAppCompatActivity implements View.OnC
                     mNickNameTv.setText(str);
                     mInfoChanged = true;
                 }
-            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            });
+            dialog.setNegativeButton("取消", new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(View v) {
                     dialog.dismiss();
                 }
-            }).setView(view);
-            builder.create().show();
+            });
+            dialog.show();
         } else if (v == mSexLayout) {
             View view = LayoutInflater.from(this).inflate(R.layout.dialog_select_age_layout, null);
             final RadioGroup rg = (RadioGroup) view.findViewById(R.id.sexRadioGroup);
@@ -202,9 +212,13 @@ public class MyProfileActivity extends BaseAppCompatActivity implements View.OnC
             } else if (mUser.getGender().equals("2")) {
                 rg.check(R.id.sex_girl);
             }
-            AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert).setCancelable(true).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+            final MaterialDialog dialog = new MaterialDialog(this);
+            dialog.setContentView(view);
+            dialog.setBackground(new ColorDrawable(Color.parseColor("#CFCFCF")));
+            dialog.setPositiveButton("确定", new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(View v) {
                     int checkedId = rg.getCheckedRadioButtonId();
                     if (checkedId == R.id.sex_boy) {
                         mUser.setGender("1");
@@ -216,21 +230,25 @@ public class MyProfileActivity extends BaseAppCompatActivity implements View.OnC
                     dialog.dismiss();
                     mInfoChanged = true;
                 }
-            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            });
+            dialog.setNegativeButton("取消", new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(View v) {
                     dialog.dismiss();
                 }
-            }).setView(view);
-            builder.create().show();
+            });
+            dialog.show();
         } else if (v == mAgeLayout) {
             View view = LayoutInflater.from(this).inflate(R.layout.input_dialog_layout, null);
             final EditText input = (EditText) view.findViewById(R.id.modify_nick);
             input.setHint("输入年龄");
             input.setInputType(InputType.TYPE_CLASS_NUMBER);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog_Alert).setCancelable(true).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            final MaterialDialog dialog = new MaterialDialog(this);
+            dialog.setContentView(view);
+
+            dialog.setPositiveButton("确定", new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(View v) {
                     String str = input.getText().toString();
                     if (TextUtils.isEmpty(str)) {
                         return;
@@ -240,13 +258,14 @@ public class MyProfileActivity extends BaseAppCompatActivity implements View.OnC
                     mAgeTv.setText(str);
                     mInfoChanged = true;
                 }
-            }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            });
+            dialog.setNegativeButton("取消", new View.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
+                public void onClick(View v) {
                     dialog.dismiss();
                 }
-            }).setView(view);
-            builder.create().show();
+            });
+            dialog.show();
         } else if (v == mRealVerifyLayout) {
             Intent in = new Intent(this, RealVerifyActivity.class);
             startActivity(in);

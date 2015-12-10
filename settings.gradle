@@ -1,1 +1,1 @@
-include ':app', ':PhotoPicker', ':volley', ':jpushexample'
+include ':app', ':PhotoPicker', ':volley'

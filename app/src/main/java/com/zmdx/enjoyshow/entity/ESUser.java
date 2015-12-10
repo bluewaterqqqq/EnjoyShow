@@ -25,6 +25,7 @@ public class ESUser implements Serializable {
     private int votes;
     private String addr;
     private String introdution;
+    // 0:未验证，1:验证成功，2:验证失败,3:待审核
     private String isValidate;
     private String telephone;
     private boolean isAttention;
@@ -103,6 +104,10 @@ public class ESUser implements Serializable {
         this.realName = realName;
     }
 
+    /**
+     * 0:未验证，1:验证成功，2:验证失败,3:待审核
+     * @return
+     */
     public String getIsValidate() {
         return isValidate;
     }

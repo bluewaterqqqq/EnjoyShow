@@ -21,8 +21,10 @@ import com.zmdx.enjoyshow.main.Fragment1;
 import com.zmdx.enjoyshow.main.Fragment2;
 import com.zmdx.enjoyshow.main.Fragment4;
 import com.zmdx.enjoyshow.main.Fragment5;
+import com.zmdx.enjoyshow.main.login.UpdateUserInfoHelper;
 import com.zmdx.enjoyshow.main.publish.PublishActivity;
 import com.zmdx.enjoyshow.main.settings.SettingsActivity;
+import com.zmdx.enjoyshow.user.ESUserManager;
 
 /**
  * Created by zhangyan on 15/10/26.
@@ -59,6 +61,7 @@ public class MainActivity extends BaseAppCompatActivity implements TabHost.OnTab
         initView();
         setTitle("照片墙");
 
+        UpdateUserInfoHelper.pullUserDetailInfo(ESUserManager.getInstance().getCurrentUserId());
         LocalBroadcastManager.getInstance(this).registerReceiver(mFinishReceiver,
                 new IntentFilter(SettingsActivity.ACTION_FINISH_ALL_ACTIVITY));
     }

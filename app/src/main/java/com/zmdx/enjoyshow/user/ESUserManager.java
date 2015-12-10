@@ -54,7 +54,7 @@ public class ESUserManager {
         ESPreferences.saveLoginStatus(status);
     }
 
-    public void saveUserInfo(String user, boolean syncServer) {
+    public synchronized void saveUserInfo(String user, boolean syncServer) {
         ESPreferences.saveUserInfo(user);
         mUser = ESUser.convertByJSON(user);
         LogHelper.d(TAG, "保存登录用户信息, user:" + user);
@@ -142,7 +142,7 @@ public class ESUserManager {
         requestQueue.add(request);
     }
 
-    public void saveUserInfo(ESUser user, boolean syncServer) {
+    public synchronized void saveUserInfo(ESUser user, boolean syncServer) {
         String userStr = ESUser.convert2JSON(user).toString();
         saveUserInfo(userStr, syncServer);
     }
@@ -152,7 +152,7 @@ public class ESUserManager {
         ESPreferences.saveLoginStatus(ESUserManager.STATUS_UNLOGIN);
     }
 
-    public ESUser getCurrentUser() {
+    public synchronized ESUser getCurrentUser() {
         if (mUser == null) {
             String userInfo = ESPreferences.getUserInfo();
             if (userInfo != null) {
