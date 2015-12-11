@@ -2,11 +2,15 @@ package com.zmdx.enjoyshow.main;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -19,6 +23,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.zmdx.enjoyshow.ESApplication;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.entity.ESBullet;
 import com.zmdx.enjoyshow.main.pic.PicFragmentPagerAdpater;
@@ -38,14 +43,17 @@ import java.util.ArrayList;
 /**
  * Created by zhangyan on 15/10/26.
  */
-public class Fragment1 extends BaseFragment {
+public class Fragment1 extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
 
     private static final String TAG = "Fragment1";
+
+    public static final String ACTION_PULL_REFRESH = "ac_pull_refresh";
+
     private TabLayout mTab;
 
     private ViewPager mPager;
 
-    private PagerAdapter mAdapter;
+    private PicFragmentPagerAdpater mAdapter;
 
     private Toolbar mToolbar;
 
@@ -60,6 +68,9 @@ public class Fragment1 extends BaseFragment {
     private boolean mPulling = false;
 
     private LinearLayout mDotContainer;
+
+    private SwipeRefreshLayout mRefreshView;
+    private AppBarLayout mAppBarLayout;
 
     public Fragment1() {
     }
@@ -86,7 +97,29 @@ public class Fragment1 extends BaseFragment {
         mTab.setupWithViewPager(mPager);
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
         initTopPager(view);
+        mRefreshView = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefresh);
+        mRefreshView.setOnRefreshListener(this);
+        mAppBarLayout = (AppBarLayout) view.findViewById(R.id.appbar);
+
         pullThemeData();
+    }
+
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int i) {
+        //The Refresh must be only active when the offset is zero :
+        mRefreshView.setEnabled(i == 0);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mAppBarLayout.addOnOffsetChangedListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mAppBarLayout.removeOnOffsetChangedListener(this);
     }
 
     @Override
@@ -98,6 +131,7 @@ public class Fragment1 extends BaseFragment {
         if (mPulling) {
             return;
         }
+        mRefreshView.setRefreshing(true);
         mPulling = true;
         final String url = createUrl();
         LogHelper.d(TAG, "开始增量拉取,url:" + url);
@@ -118,11 +152,13 @@ public class Fragment1 extends BaseFragment {
                         mTopPager.setCurrentItem(0);
                     }
                 }
+                mRefreshView.setRefreshing(false);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 mPulling = false;
+                mRefreshView.setRefreshing(false);
                 LogHelper.e(TAG, "onErrorResponse:" + error.getMessage());
             }
         });
@@ -135,7 +171,7 @@ public class Fragment1 extends BaseFragment {
         if (activity != null) {
             int length = mTopList.size();
             LayoutInflater inflater = LayoutInflater.from(activity);
-
+            mDotContainer.removeAllViews();
             for (int i = 0; i < length; i++) {
                 ImageView dotView = (ImageView) inflater.inflate(R.layout.pager_dot,
                         mDotContainer, false);
@@ -180,6 +216,13 @@ public class Fragment1 extends BaseFragment {
     @Override
     protected Toolbar getToolbar() {
         return mToolbar;
+    }
+
+    @Override
+    public void onRefresh() {
+        pullThemeData();
+        LocalBroadcastManager.getInstance(ESApplication.getInstance()).sendBroadcast(new Intent(ACTION_PULL_REFRESH));
+
     }
 
     private class TopPagerAdapter extends PagerAdapter {

@@ -31,7 +31,7 @@ import java.util.List;
 /**
  * Created by zhangyan on 15/11/28.
  */
-public class FollowFragment extends Fragment implements IRefreshListener {
+public class FollowFragment extends BasePicFragment {
 
     private static final String TAG = "FollowFragment";
 
@@ -115,6 +115,11 @@ public class FollowFragment extends Fragment implements IRefreshListener {
         if (mRecyclerView != null) {
             mRecyclerView.clearOnScrollListeners();
         }
+    }
+
+    @Override
+    protected void onPicSetDeleted(String picSetId) {
+        // TODO
     }
 
     private void pullData(final boolean order) {

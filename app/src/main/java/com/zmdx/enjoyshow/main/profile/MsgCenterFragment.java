@@ -198,6 +198,11 @@ public class MsgCenterFragment extends BasePicFragment {
     }
 
     @Override
+    protected void onRefresh() {
+        // 暂不需要刷新
+    }
+
+    @Override
     protected void onPicSetDeleted(String picSetId) {
     }
 }

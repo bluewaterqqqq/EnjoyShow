@@ -34,7 +34,7 @@ import java.util.Set;
 /**
  * Created by zhangyan on 15/10/26.
  */
-public class PicRecommendFragment extends BasePicFragment implements IRefreshListener {
+public class PicRecommendFragment extends BasePicFragment {
 
     private static final String TAG = "PicRecommendFragment";
 
@@ -81,6 +81,7 @@ public class PicRecommendFragment extends BasePicFragment implements IRefreshLis
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new RecommandAdapter(getContext(), mPics);
         mRecyclerView.setAdapter(mAdapter);
+
     }
 
     @Override
