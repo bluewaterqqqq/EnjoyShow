@@ -28,6 +28,7 @@
 -keepattributes *Annotation*
 -keep public class * extends android.support.design.widget.CoordinatorLayout.Behavior { *; }
 -keep public class * extends android.support.design.widget.ViewOffsetBehavior { *; }
+-keep class cn.pedant.SweetAlert.** { *; }
 -dontwarn org.apache.http.**
 -dontwarn android.net.http.AndroidHttpClient
 -dontwarn com.google.android.gms.**

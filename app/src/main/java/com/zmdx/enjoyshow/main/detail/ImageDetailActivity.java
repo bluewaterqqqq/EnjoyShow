@@ -20,7 +20,6 @@ import com.zmdx.enjoyshow.entity.ESPicInfo;
 import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.main.detail.ui.ESPicSetView;
 import com.zmdx.enjoyshow.main.profile.UserProfileActivity;
-import com.zmdx.enjoyshow.main.publish.PublishActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
@@ -50,6 +49,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,6 +81,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
     private int mCommentTargetId = -1;//回复评论,对方的userId
     private CommentAdapter mCommentAdapter;
     private TextView mVoteNumTv;
+    private ScrollView mScrollView;
 
     public static void start(Context context, String pictureSetId) {
         Intent in = new Intent(context, ImageDetailActivity.class);
@@ -162,6 +163,9 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         initPraiseListView(data);
         initCommentView(data);
         initVote(data);
+
+        mScrollView = (ScrollView) findViewById(R.id.scrollView);
+        mScrollView.scrollTo(0, 0);
     }
 
     private void initVote(final ESPhotoSet data) {
@@ -348,18 +352,20 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
                 ImageLoaderManager.getImageLoader().displayImage(pi.getHeadPortrait(), view,
                         ImageLoaderOptionsUtils.getHeadImageOptions());
             }
-            TextView moreView = new TextView(context);
-            moreView.setText("...");
-            moreView.setGravity(Gravity.CENTER_VERTICAL);
-            moreView.setTextColor(Color.parseColor("#30000000"));
-            moreView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AllPraisedActivity.start(ImageDetailActivity.this, praises);
-                }
-            });
-            lp.leftMargin = BaseInfoHelper.dip2px(context, 6);
-            mPraiseLayout.addView(moreView, lp);
+            if (mData.getPraiseNum() > limit) {
+                TextView moreView = new TextView(context);
+                moreView.setText("...");
+                moreView.setGravity(Gravity.CENTER_VERTICAL);
+                moreView.setTextColor(Color.parseColor("#30000000"));
+                moreView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AllPraisedActivity.start(ImageDetailActivity.this, mData.getId());
+                    }
+                });
+                lp.leftMargin = BaseInfoHelper.dip2px(context, 6);
+                mPraiseLayout.addView(moreView, lp);
+            }
         }
 
         // 点赞事件

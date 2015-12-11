@@ -65,7 +65,6 @@ public class PublishActivity extends BaseAppCompatActivity {
             mTheme = (ESTheme) in.getSerializableExtra("theme");
         }
 
-        LogHelper.d(TAG, "type=" + mType + ", mThemeId:" + mTheme.getmId() + ",mThemeTitle:" + mTheme.getmTitle());
         setContentView(R.layout.publish_layout);
         initView();
 
