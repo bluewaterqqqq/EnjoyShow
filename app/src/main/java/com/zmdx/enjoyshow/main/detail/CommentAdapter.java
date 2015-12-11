@@ -7,6 +7,7 @@ import com.zmdx.enjoyshow.entity.ESComment;
 import com.zmdx.enjoyshow.utils.ESDateFormat;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
+import com.zmdx.enjoyshow.utils.LogHelper;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +21,8 @@ import android.widget.TextView;
  */
 public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
+    private static final String TAG = "CommentAdapter";
+    
     private List<ESComment> mData;
 
     private LayoutInflater mInflater;
@@ -82,6 +85,22 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public void deleteComment(int position) {
         // TODO
+    }
+
+    public void appendData(List<ESComment> newData) {
+        mData.addAll(newData);
+
+        // 计算新增数据的start position和end position
+        int startIndex = mData.size() - newData.size();
+        int endIndex = mData.size() - 1;
+
+        //逐条刷新新增的数据到界面
+        for (int pos = startIndex; pos <= endIndex; pos++) {
+            notifyItemInserted(pos);
+        }
+
+        LogHelper.d(TAG, "增量更新" + newData.size() + "条");
+
     }
 
     public static class CommentHolder extends RecyclerView.ViewHolder {

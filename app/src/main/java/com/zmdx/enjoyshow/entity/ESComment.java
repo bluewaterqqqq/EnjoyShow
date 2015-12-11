@@ -19,7 +19,9 @@ public class ESComment {
     private String parentUserId;
     private String picSetId;
     private ESUser user;
-//    private String userId; // 已废弃
+    private String lastId;
+
+    //    private String userId; // 已废弃
 //    private String userName; // 已废弃
 
     public String getContent() {
@@ -70,6 +72,15 @@ public class ESComment {
         this.user = user;
     }
 
+
+    public String getLastId() {
+        return lastId;
+    }
+
+    public void setLastId(String lastId) {
+        this.lastId = lastId;
+    }
+
 //    public String getUserId() {
 //        return userId;
 //    }
@@ -91,7 +102,7 @@ public class ESComment {
         if (!TextUtils.isEmpty(comments)) {
             try {
                 JSONArray array = new JSONArray(comments);
-                for (int i=0 ;i<array.length(); i++) {
+                for (int i = 0; i < array.length(); i++) {
                     JSONObject obj = array.optJSONObject(i);
                     if (obj != null) {
                         ESComment comment = new ESComment();
@@ -101,16 +112,16 @@ public class ESComment {
                         comment.setParentUserId(obj.optString("parentUserId"));
                         comment.setPicSetId(obj.optString("pictureSetId"));
                         comment.setUser(ESUser.convertByJSON(obj.optString("user")));
-//                        comment.setUserId(obj.optString("userId"));
-//                        comment.setUserName(obj.optString("username"));
+                        comment.setLastId(obj.optString("orderId"));
                         list.add(comment);
                     }
                 }
             } catch (JSONException e) {
+                e.printStackTrace();
                 // ignore
             }
         }
 
-        return null;
+        return list;
     }
 }

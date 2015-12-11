@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,6 +15,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
+import com.zmdx.enjoyshow.common.ESConfig;
 import com.zmdx.enjoyshow.entity.ESComment;
 import com.zmdx.enjoyshow.entity.ESPhotoSet;
 import com.zmdx.enjoyshow.entity.ESPicInfo;
@@ -82,6 +84,9 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
     private CommentAdapter mCommentAdapter;
     private TextView mVoteNumTv;
     private ScrollView mScrollView;
+    private ArrayList<ESComment> mCommentData = new ArrayList<ESComment>();
+    private String mLastCommentId = "0";
+    private boolean mPullingComments = false;
 
     public static void start(Context context, String pictureSetId) {
         Intent in = new Intent(context, ImageDetailActivity.class);
@@ -259,11 +264,12 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
     }
 
     private String createSendCommentUrl(int targetUserId, String content) {
-        String encodeContent = "";
+        String encodeContent = null;
         try {
-            encodeContent = URLEncoder.encode(content, "utf-8");
+            String newontent = URLEncoder.encode(content, "utf-8");
+            encodeContent = URLEncoder.encode(newontent, "utf-8");
         } catch (UnsupportedEncodingException e) {
-            // ignore
+            e.printStackTrace();
         }
         String params = "?pictureSetId=" + mPicSetId
                 + "&currentUserId=" + ESUserManager.getInstance().getCurrentUserId()
@@ -420,19 +426,80 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
     }
 
     private void initCommentView(ESPhotoSet data) {
-        if (data.getComments() == null || data.getComments().size() <= 0) {
-            LogHelper.d(TAG, "还没有评论");
-            return;
+        if (data.getComments() != null && data.getComments().size() > 0) {
+            mCommentData.addAll(data.getComments());
         }
-        LogHelper.d(TAG, "评论条数:" + data.getComments().size());
+        LogHelper.d(TAG, "评论条数:" + mCommentData.size());
         mCommentRecyclerView = (RecyclerView) findViewById(R.id.commentRecyclerView);
-        mCommentAdapter = new CommentAdapter(this, data.getComments());
-        mCommentRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mCommentAdapter = new CommentAdapter(this, mCommentData);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mCommentRecyclerView.setLayoutManager(layoutManager);
         mCommentRecyclerView.setAdapter(mCommentAdapter);
+        mCommentRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                int lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+                int totalItemCount = layoutManager.getItemCount();
+                //lastVisibleItem >= totalItemCount - 4 表示剩下4个item自动加载
+                // dy>0 表示向下滑动
+                if (lastVisibleItem >= totalItemCount - 4 && dy > 0) {
+                    pullMoreComments();
+                }
+            }
+        });
         mCommentEt = (EditText) findViewById(R.id.commentEt);
         mSendCommentBtn = (Button) findViewById(R.id.commentBtn);
         mSendCommentBtn.setOnClickListener(this);
+    }
+
+    private String creatLoadMoreCommentUrl() {
+        String params = "?pictureSetId=" + mPicSetId + "&lastId=" + mLastCommentId + "&limit=20";
+        return UrlBuilder.getUrl(ActionConstants.ACTION_LOAD_MORE_COMMENTS, params);
+    }
+
+    private void pullMoreComments() {
+        if (mPullingComments) {
+            return;
+        }
+        mPullingComments = true;
+        LogHelper.d(TAG, "开始下拉刷新");
+        final String url = creatLoadMoreCommentUrl();
+        LogHelper.d(TAG, "url:" + url);
+        final RequestQueue requestQueue = RequestQueueManager.getRequestQueue();
+        JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                mPullingComments = false;
+                LogHelper.d(TAG, "response:" + response);
+                int state = response.optInt("state");
+                if (state == 0) {
+                    JSONObject obj = response.optJSONObject("result");
+                    JSONArray array = obj.optJSONArray("comments");
+
+                    List<ESComment> data = parseCommentsData(array);
+                    if (data != null && data.size() > 0) {
+                        mCommentAdapter.appendData(data);
+                        mLastCommentId = data.get(data.size() - 1).getLastId();
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mPullingComments = false;
+                LogHelper.e(TAG, "onErrorResponse:" + error.getMessage());
+            }
+        });
+
+        requestQueue.add(request);
+    }
+
+    private List<ESComment> parseCommentsData(JSONArray array) {
+        ArrayList<ESComment> result = new ArrayList<>();
+        if (array != null && array.length() > 0) {
+            result.addAll(ESComment.convertByJSON(array.toString()));
+        }
+        return result;
     }
 
     @Override
@@ -459,6 +526,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
      * @param content      评论内容
      */
     private void sendComment(final int targetUserId, final String content) {
+
         mSendCommentBtn.setEnabled(false);
         String url = createSendCommentUrl(targetUserId, content);
         LogHelper.d(TAG, "send comment url:" + url);
@@ -478,6 +546,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
                                 ESComment comment = new ESComment();
                                 ESUser user = ESUserManager.getInstance().getCurrentUser();
                                 comment.setUser(user);
+
                                 comment.setContent(content);
                                 comment.setId(newCommentId);
                                 comment.setParentUserId(String.valueOf(targetUserId));

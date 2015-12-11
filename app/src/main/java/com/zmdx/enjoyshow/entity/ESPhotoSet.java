@@ -6,11 +6,14 @@ import java.util.List;
 import org.json.JSONObject;
 
 import com.zmdx.enjoyshow.common.ESConfig;
+import com.zmdx.enjoyshow.utils.LogHelper;
 
 /**
  * Created by zhangyan on 15/11/21.
  */
 public class ESPhotoSet {
+
+    private static final String TAG = "ESPhotoSet";
 
     private List<ESPicInfo> pics;
 
