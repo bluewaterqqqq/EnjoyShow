@@ -63,7 +63,12 @@ public class ActionConstants {
 
     public static final String ACTION_UPLOAD_REAL = CONTEXT + "photo_realityVerification.action"; // 上传真人验证头像
 
-    public static final String ACTION_LOAD_ALLPRAISE = CONTEXT + "photo_loadPraiseUserList.action"; // 上传真人验证头像
+    public static final String ACTION_LOAD_ALLPRAISE = CONTEXT + "photo_loadPraiseUserList.action";
 
-    public static final String ACTION_LOAD_MORE_COMMENTS = CONTEXT + "photo_loadComment.action"; // 上传真人验证头像
+    public static final String ACTION_LOAD_MORE_COMMENTS = CONTEXT + "photo_loadComment.action";
+
+    public static final String ACTION_REPORT = CONTEXT + "photo_reportPhoto.action";
+
+    public static final String ACTION_DELETE_COMMENT = CONTEXT + "photo_deleteComment.action";
+
 }

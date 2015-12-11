@@ -43,6 +43,8 @@ import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -123,6 +125,64 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
                 finish();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_share:
+                // TODO
+                break;
+            case R.id.menu_jubao:
+                reportPicSet();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private boolean mReporting = false;
+
+    private void reportPicSet() {
+        if (mReporting) {
+            return;
+        }
+        mReporting = true;
+        final String url = createReportUrl();
+        LogHelper.d(TAG, "url:" + url);
+        final RequestQueue requestQueue = RequestQueueManager.getRequestQueue();
+        JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                mReporting = false;
+                LogHelper.d(TAG, "response:" + response);
+                int state = response.optInt("state");
+                if (state == 0) {
+                    Toast.makeText(ImageDetailActivity.this, "举报成功", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                mReporting = false;
+                LogHelper.e(TAG, "onErrorResponse:" + error.getMessage());
+                Toast.makeText(ImageDetailActivity.this, "网络异常", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+
+        requestQueue.add(request);
+    }
+
+    private String createReportUrl() {
+        return UrlBuilder.getUrl(ActionConstants.ACTION_REPORT, "?pictureSetId=" + mPicSetId);
     }
 
     private void pullData() {

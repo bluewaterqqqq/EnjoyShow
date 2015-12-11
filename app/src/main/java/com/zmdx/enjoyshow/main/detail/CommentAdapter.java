@@ -2,8 +2,17 @@ package com.zmdx.enjoyshow.main.detail;
 
 import java.util.List;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.entity.ESComment;
+import com.zmdx.enjoyshow.entity.ESUser;
+import com.zmdx.enjoyshow.network.ActionConstants;
+import com.zmdx.enjoyshow.network.RequestQueueManager;
+import com.zmdx.enjoyshow.network.UrlBuilder;
+import com.zmdx.enjoyshow.user.ESUserManager;
 import com.zmdx.enjoyshow.utils.ESDateFormat;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
@@ -16,13 +25,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 /**
  * Created by zhangyan on 15/11/22.
  */
 public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
     private static final String TAG = "CommentAdapter";
-    
+
     private List<ESComment> mData;
 
     private LayoutInflater mInflater;
@@ -38,7 +51,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new CommentHolder(mInflater.inflate(R.layout.comment_item, parent, false));
-
     }
 
     @Override
@@ -55,6 +67,41 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         cHolder.itemView.setOnClickListener(this);
         cHolder.itemView.setTag(position);
         cHolder.mHeadIcon.setTag(position);
+
+        if (isMyComment(position)) {
+            cHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    final int position = (Integer) v.getTag();
+                    SweetAlertDialog dialog = new SweetAlertDialog(mActivity, SweetAlertDialog.WARNING_TYPE);
+                    dialog.setTitleText("删除评论");
+                    dialog.setContentText("确认删除这条评论吗?");
+                    dialog.setConfirmText("确定");
+                    dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            deleteComment(position);
+                            sweetAlertDialog.dismissWithAnimation();
+                        }
+                    });
+                    dialog.setCancelText("取消");
+                    dialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            sweetAlertDialog.dismissWithAnimation();
+                        }
+                    });
+                    dialog.show();
+                    return true;
+                }
+            });
+        }
+    }
+
+    private boolean isMyComment(int position) {
+        final ESComment c = mData.get(position);
+        LogHelper.d(TAG, "my userId is " + ESUserManager.getInstance().getCurrentUserId());
+        return (c.getUser().getId() + "").equals(ESUserManager.getInstance().getCurrentUserId());
     }
 
     @Override
@@ -84,7 +131,28 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public void deleteComment(int position) {
-        // TODO
+        String commentId = mData.get(position).getId();
+        mData.remove(position);
+        notifyItemRemoved(position);
+        final String url = UrlBuilder.getUrl(ActionConstants.ACTION_DELETE_COMMENT, "?id=" + commentId);
+        LogHelper.d(TAG, "url:" + url);
+        final RequestQueue requestQueue = RequestQueueManager.getRequestQueue();
+        JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                LogHelper.d(TAG, "response:" + response);
+                if (response.optInt("state") == 0) {
+                    LogHelper.d(TAG, "评论删除成功");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                LogHelper.e(TAG, "onErrorResponse:" + error.getMessage());
+            }
+        });
+
+        requestQueue.add(request);
     }
 
     public void appendData(List<ESComment> newData) {

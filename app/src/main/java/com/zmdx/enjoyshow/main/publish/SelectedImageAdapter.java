@@ -15,6 +15,7 @@ import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public void appendData(List<String> newData) {
-        mData.addAll(Math.max(0, mData.size() - 2), newData);
+        mData.addAll(Math.max(0, mData.size() - 1), newData);
         if (mData.size() > 9) {
             mData.remove(9);
         }
@@ -103,7 +104,14 @@ public class SelectedImageAdapter extends RecyclerView.Adapter<RecyclerView.View
         } else if (type == TYPE_IMAGE) {
             Intent intent = new Intent(mContext, PhotoPagerActivity.class);
             intent.putExtra(PhotoPagerActivity.EXTRA_CURRENT_ITEM, position);
-            intent.putExtra(PhotoPagerActivity.EXTRA_PHOTOS, (ArrayList<String>) mData);
+            ArrayList<String> data = new ArrayList<>();
+            data.addAll(mData);
+            // 移除最后的加号数据
+            String lastStr = data.get(mData.size() - 1);
+            if (lastStr.equals(ADD_BTN)) {
+                data.remove(data.size() - 1);
+            }
+            intent.putExtra(PhotoPagerActivity.EXTRA_PHOTOS, data);
             intent.putExtra(PhotoPagerActivity.EXTRA_SHOW_DELETE, true);
             if (mContext instanceof PublishActivity) {
                 mContext.startActivity(intent);

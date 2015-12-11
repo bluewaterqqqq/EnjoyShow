@@ -51,4 +51,8 @@ public class ESPreferences {
     public static String getWXRefreshToken() {
         return sSp.getString(KEY_WX_REFRESH_TOKEN, "");
     }
+
+    public static void clearUserInfo() {
+        sSp.edit().remove(KEY_USER_INFO).apply();
+    }
 }

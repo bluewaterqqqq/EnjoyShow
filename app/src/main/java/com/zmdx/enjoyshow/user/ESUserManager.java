@@ -149,6 +149,7 @@ public class ESUserManager {
 
     public void logout() {
         mUser = null;
+        ESPreferences.clearUserInfo();
         ESPreferences.saveLoginStatus(ESUserManager.STATUS_UNLOGIN);
     }
 

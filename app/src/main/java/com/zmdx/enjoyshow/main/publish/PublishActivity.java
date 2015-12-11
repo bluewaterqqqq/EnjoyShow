@@ -171,7 +171,7 @@ public class PublishActivity extends BaseAppCompatActivity {
                 photos = data.getStringArrayListExtra(PhotoPickerActivity.KEY_SELECTED_PHOTOS);
             }
 
-            if (photos != null) {
+            if (photos != null && photos.size() > 0) {
                 mAdapter.appendData(photos);
             }
         }
