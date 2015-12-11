@@ -13,6 +13,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.entity.ESPhoto;
+import com.zmdx.enjoyshow.main.pic.BasePicFragment;
 import com.zmdx.enjoyshow.main.pic.RecommandAdapter;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
@@ -33,7 +34,7 @@ import android.view.ViewGroup;
 /**
  * Created by zhangyan on 15/11/15.
  */
-public class DetectNewestFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class DetectNewestFragment extends BasePicFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "DetectNewestFragment";
 
@@ -117,6 +118,20 @@ public class DetectNewestFragment extends Fragment implements SwipeRefreshLayout
         super.onPause();
         if (mRecyclerView != null) {
             mRecyclerView.clearOnScrollListeners();
+        }
+    }
+
+    @Override
+    protected void onPicSetDeleted(String picSetId) {
+        int pos = -1;
+        for (int i= 0;i<mPics.size();i++) {
+            ESPhoto photo = mPics.get(i);
+            if (picSetId.equals(photo.getId())) {
+                pos = i;
+            }
+        }
+        if (pos != -1) {
+            mAdapter.delete(pos);
         }
     }
 

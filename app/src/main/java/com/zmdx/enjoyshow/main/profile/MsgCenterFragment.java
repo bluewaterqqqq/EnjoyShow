@@ -5,6 +5,7 @@ package com.zmdx.enjoyshow.main.profile;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +18,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.entity.ESNotification;
-import com.zmdx.enjoyshow.entity.ESUser;
+import com.zmdx.enjoyshow.main.pic.BasePicFragment;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
@@ -30,14 +31,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
  * Created by zhangyan on 15/12/4.
  */
-public class MsgCenterFragment extends android.support.v4.app.Fragment {
+public class MsgCenterFragment extends BasePicFragment {
 
     private static final String TAG = "MsgCenterFragment";
 
@@ -195,5 +195,9 @@ public class MsgCenterFragment extends android.support.v4.app.Fragment {
         if (mRecyclerView != null) {
             mRecyclerView.clearOnScrollListeners();
         }
+    }
+
+    @Override
+    protected void onPicSetDeleted(String picSetId) {
     }
 }

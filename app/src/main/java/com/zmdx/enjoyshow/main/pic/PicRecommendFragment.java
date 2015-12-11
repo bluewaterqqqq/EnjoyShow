@@ -34,7 +34,7 @@ import java.util.Set;
 /**
  * Created by zhangyan on 15/10/26.
  */
-public class PicRecommendFragment extends Fragment implements IRefreshListener {
+public class PicRecommendFragment extends BasePicFragment implements IRefreshListener {
 
     private static final String TAG = "PicRecommendFragment";
 
@@ -110,6 +110,20 @@ public class PicRecommendFragment extends Fragment implements IRefreshListener {
         super.onPause();
         if (mRecyclerView != null) {
             mRecyclerView.clearOnScrollListeners();
+        }
+    }
+
+    @Override
+    protected void onPicSetDeleted(String picSetId) {
+        int pos = -1;
+        for (int i= 0;i<mPics.size();i++) {
+            ESPhoto photo = mPics.get(i);
+            if (picSetId.equals(photo.getId())) {
+                pos = i;
+            }
+        }
+        if (pos != -1) {
+            mAdapter.delete(pos);
         }
     }
 

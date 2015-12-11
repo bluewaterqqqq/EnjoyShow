@@ -71,4 +71,6 @@ public class ActionConstants {
 
     public static final String ACTION_DELETE_COMMENT = CONTEXT + "photo_deleteComment.action";
 
+    public static final String ACTION_DELETE_PICSET = CONTEXT + "photo_deletePictureSet.action";
+
 }

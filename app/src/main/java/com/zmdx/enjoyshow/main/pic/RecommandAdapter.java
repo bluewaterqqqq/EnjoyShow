@@ -124,6 +124,11 @@ public class RecommandAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         notifyDataSetChanged();
     }
 
+    public void delete(int pos) {
+        mData.remove(pos);
+        notifyItemRemoved(pos);
+    }
+
     public static class PicViewHolder extends RecyclerView.ViewHolder {
         public ImageView coverView;
 //        public ImageView headView;

@@ -100,7 +100,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private boolean isMyComment(int position) {
         final ESComment c = mData.get(position);
-        LogHelper.d(TAG, "my userId is " + ESUserManager.getInstance().getCurrentUserId());
         return (c.getUser().getId() + "").equals(ESUserManager.getInstance().getCurrentUserId());
     }
 

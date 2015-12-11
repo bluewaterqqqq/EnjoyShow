@@ -13,6 +13,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.zmdx.enjoyshow.ESApplication;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
 import com.zmdx.enjoyshow.common.ESConfig;
@@ -21,6 +22,7 @@ import com.zmdx.enjoyshow.entity.ESPhotoSet;
 import com.zmdx.enjoyshow.entity.ESPicInfo;
 import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.main.detail.ui.ESPicSetView;
+import com.zmdx.enjoyshow.main.pic.BasePicFragment;
 import com.zmdx.enjoyshow.main.profile.UserProfileActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
@@ -36,6 +38,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.view.menu.ActionMenuItem;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -127,25 +131,81 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         });
     }
 
+    private Menu mMenu;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        mMenu = menu;
         return true;
     }
 
-    @Override
+    private void updateMenuList(Menu menu) {
+        menu.add(Menu.NONE, 1, Menu.NONE, "分享");
+        if (isMyPicSet()) {
+            menu.add(Menu.NONE, 2, Menu.NONE, "删除");
+        } else {
+            menu.add(Menu.NONE, 3, Menu.NONE, "举报");
+        }
+    }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_share:
+            case 1:
                 // TODO
                 break;
-            case R.id.menu_jubao:
+            case 3:
                 reportPicSet();
+                break;
+            case 2:
+                deletePicSet();
                 break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean deletingPicSet = false;
+
+    private void deletePicSet() {
+        if (deletingPicSet) {
+            return;
+        }
+        deletingPicSet = true;
+        String url = UrlBuilder.getUrl(ActionConstants.ACTION_DELETE_PICSET, "?pictureSetIds=" + mPicSetId + "&userId=" + mData.getUserId());
+        final RequestQueue requestQueue = RequestQueueManager.getRequestQueue();
+        JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                deletingPicSet = false;
+                LogHelper.d(TAG, "response:" + response);
+                int state = response.optInt("state");
+                if (state == 0) {
+                    Toast.makeText(ImageDetailActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                    finish();
+                    // 发广播通知前一个activity更新列表
+                    Intent in = new Intent(BasePicFragment.ACTION_DELETE_PICSET);
+                    in.putExtra("picSetId", mPicSetId);
+                    LocalBroadcastManager.getInstance(ESApplication.getInstance()).sendBroadcast(in);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                deletingPicSet = false;
+                LogHelper.e(TAG, "onErrorResponse:" + error.getMessage());
+                Toast.makeText(ImageDetailActivity.this, "删除失败, 网络异常", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+
+        requestQueue.add(request);
+
+    }
+
+    private boolean isMyPicSet() {
+
+        return mData.getUserId().equals(ESUserManager.getInstance().getCurrentUserId());
     }
 
     private boolean mReporting = false;
@@ -207,6 +267,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
                 mData = parseResponse2Data(response);
                 if (mData != null) {
                     render(mData);
+
                 }
             }
         }, new Response.ErrorListener() {
@@ -228,6 +289,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         initPraiseListView(data);
         initCommentView(data);
         initVote(data);
+        updateMenuList(mMenu);
 
         mScrollView = (ScrollView) findViewById(R.id.scrollView);
         mScrollView.scrollTo(0, 0);
