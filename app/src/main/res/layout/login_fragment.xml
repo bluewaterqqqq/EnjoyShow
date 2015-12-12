@@ -12,6 +12,8 @@
         android:background="#80000000"
         android:layout_marginTop="50dp"
         android:paddingTop="6dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <LinearLayout
@@ -35,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
                     android:textSize="15dp"
-                    android:inputType="phone"
+                    android:inputType="text"
                     android:hint="请输入手机号码" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>

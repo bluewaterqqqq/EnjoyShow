@@ -95,8 +95,8 @@
 
         <ImageView
             android:onClick="onClickWechat"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:clickable="true"
             android:scaleType="fitXY"
             android:src="@drawable/wechat_button_nor" />

@@ -12,6 +12,8 @@
         android:layout_marginTop="50dp"
         android:background="#80000000"
         android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:paddingTop="6dp">
 
         <LinearLayout
@@ -95,16 +97,16 @@
 
             <TextView
                 android:id="@+id/getIdentifyCodeBtn"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:background="@android:color/holo_orange_light"
+                android:layout_width="85dp"
+                android:layout_height="34dp"
+                android:background="@drawable/gray_oval_btn_bg"
                 android:gravity="center"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:text="获取验证码"
                 android:layout_gravity="center_vertical"
                 android:textColor="#ffffff"
-                android:textSize="15dp" />
+                android:textSize="12dp" />
         </LinearLayout>
     </LinearLayout>
 

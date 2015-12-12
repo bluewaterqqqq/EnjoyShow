@@ -151,8 +151,8 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
         } else {
             if (mUser.isAttention()) {
                 mFollowBtn.setText("取消关注");
-                mFollowBtn.setTextColor(Color.parseColor("#ffffbb33"));
-                mFollowBtn.setBackgroundResource(R.drawable.white_btn_bg);
+                mFollowBtn.setTextColor(Color.parseColor("#b4b4b4"));
+                mFollowBtn.setBackgroundColor(Color.parseColor("#f6f6f6"));
                 mFollowBtn.setVisibility(View.VISIBLE);
             } else {
                 mFollowBtn.setText("关注");

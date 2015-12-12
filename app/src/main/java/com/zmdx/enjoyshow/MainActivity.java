@@ -105,12 +105,9 @@ public class MainActivity extends BaseAppCompatActivity implements TabHost.OnTab
             tabText.setText("秀吧");
             tabSpec.setIndicator(mIndicators[1]);
         } else if (tag.equals(TAB_3_TAG)) {
-            mIndicators[2] = getLayoutInflater().inflate(R.layout.tab_item, null);
+            mIndicators[2] = getLayoutInflater().inflate(R.layout.tab_camera_item, null);
             tabImage = (ImageView) mIndicators[2].findViewById(R.id.tab_image);
-            tabText = (TextView) mIndicators[2].findViewById(R.id.tab_text);
 
-            tabImage.setImageResource(R.drawable.tab3_item_bg);
-            tabText.setText("");
             tabSpec.setIndicator(mIndicators[2]);
             tabImage.setOnClickListener(new View.OnClickListener() {
                 @Override

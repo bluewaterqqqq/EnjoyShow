@@ -102,7 +102,6 @@ public class RegistFragment extends android.support.v4.app.Fragment implements V
         }
         mGetCoding = true;
         mGetCodeBtn.setText("获取中...");
-        mGetCodeBtn.setBackgroundColor(Color.GRAY);
 
         String url = createGetCodeUrl(phoneNum);
         JsonObjectRequest request = new JsonObjectRequest(url, null, new Response.Listener<JSONObject>() {
@@ -143,7 +142,7 @@ public class RegistFragment extends android.support.v4.app.Fragment implements V
                 int value = Math.max(0, mGetCodeInterval);
                 if (value == 0) {
                     mGetCodeBtn.setEnabled(true);
-                    mGetCodeBtn.setBackgroundColor(getContext().getResources().getColor(android.R.color.holo_orange_light));
+//                    mGetCodeBtn.setBackgroundResource(R.drawable.gray_oval_btn_bg);
                     mGetCodeBtn.setText("获取验证码");
                 } else {
                     mGetCodeBtn.setEnabled(false);

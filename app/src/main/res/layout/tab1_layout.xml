@@ -59,7 +59,7 @@
                 app:tabIndicatorColor="@android:color/holo_orange_light"
                 app:tabMode="fixed"
                 app:tabSelectedTextColor="@android:color/holo_orange_light"
-                app:tabTextColor="#a0000000" />
+                app:tabTextColor="@color/tabTextColor" />
         </android.support.design.widget.AppBarLayout>
     </android.support.design.widget.CoordinatorLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

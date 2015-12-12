@@ -27,7 +27,6 @@
         android:gravity="center"
         android:textColor="#b0ffffff"
         android:textSize="11dp" />
-
     <!--    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="20dp"
