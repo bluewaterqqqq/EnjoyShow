@@ -1,6 +1,7 @@
 package me.iwf.photopicker.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -63,6 +64,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
     if (viewType == ITEM_TYPE_CAMERA) {
       holder.vSelected.setVisibility(View.GONE);
       holder.ivPhoto.setScaleType(ImageView.ScaleType.CENTER);
+      holder.ivPhoto.setBackgroundColor(Color.parseColor("#eaeaea"));
       holder.ivPhoto.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
           if (onCameraClickListener != null) {
@@ -127,7 +129,7 @@ public class PhotoGridAdapter extends SelectableAdapter<PhotoGridAdapter.PhotoVi
       });
 
     } else {
-      holder.ivPhoto.setImageResource(R.drawable.camera);
+      holder.ivPhoto.setImageResource(R.drawable.select_image_camera);
     }
   }
 

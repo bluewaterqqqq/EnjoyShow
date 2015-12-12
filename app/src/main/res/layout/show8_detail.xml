@@ -63,7 +63,7 @@
                 android:layout_height="45dp"
                 android:layout_gravity="bottom"
                 app:tabBackground="@color/tabLayoutbgColor"
-                app:tabTextColor="#a0000000"
+                app:tabTextColor="@color/tabTextColor"
                 app:tabIndicatorColor="@android:color/holo_orange_light"
                 app:tabSelectedTextColor="@android:color/holo_orange_light"
                 app:tabGravity="fill"
