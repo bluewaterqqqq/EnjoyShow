@@ -24,43 +24,66 @@
         </activity>
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".main.detail.ImageDetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".main.detail.AllPraisedActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".main.profile.UserProfileActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".main.show.Show8DetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".main.publish.PublishActivity" />
-        <activity android:name="me.iwf.photopicker.PhotoPickerActivity" />
+        <activity
+            android:name=".main.publish.PublishActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="me.iwf.photopicker.PhotoPagerActivity" />
-        <activity android:name=".main.login.LoginRegistActivity" />
-        <activity android:name=".main.settings.SettingsActivity" />
-        <activity android:name=".main.settings.MyProfileActivity" />
+        <activity
+            android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.login.LoginRegistActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.settings.SettingsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.settings.MyProfileActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".main.ExprienceActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".main.settings.RealVerifyActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme_Light" />
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
 
         <!-- Required SDK核心功能-->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:exported="false">
+            android:exported="false"
+            android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="${applicationId}" />
             </intent-filter>
@@ -69,8 +92,7 @@
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
-            android:exported="false" >
-        </service>
+            android:exported="false"></service>
 
 
         <!-- Required SDK 核心功能-->
@@ -118,19 +140,22 @@
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
                 <data android:scheme="package" />
             </intent-filter>
 
         </receiver>
 
         <!-- Required SDK核心功能-->
-        <receiver android:name="cn.jpush.android.service.AlarmReceiver" android:exported="false"/>
+        <receiver
+            android:name="cn.jpush.android.service.AlarmReceiver"
+            android:exported="false" />
 
         <!-- User defined.  For test only  用户自定义的广播接收器-->
         <receiver
             android:name="com.zmdx.enjoyshow.push.MyPushReceiver"
-            android:exported="false"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION" /> <!--Required  用户注册SDK的intent-->
                 <action android:name="cn.jpush.android.intent.UNREGISTRATION" />
@@ -144,8 +169,12 @@
         </receiver>
 
         <!-- Required  . Enable it you can get statistics data with channel -->
-        <meta-data android:name="JPUSH_CHANNEL" android:value="zmdx"/>
-        <meta-data android:name="JPUSH_APPKEY" android:value="b1d281203f8f4d8b2d7f2993" />
+        <meta-data
+            android:name="JPUSH_CHANNEL"
+            android:value="zmdx" />
+        <meta-data
+            android:name="JPUSH_APPKEY"
+            android:value="b1d281203f8f4d8b2d7f2993" />
 
         <!-- UMeng 配置-->
         <meta-data
@@ -156,13 +185,14 @@
     <permission
         android:name="${applicationId}.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="${applicationId}.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />

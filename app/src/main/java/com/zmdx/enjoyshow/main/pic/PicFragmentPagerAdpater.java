@@ -1,6 +1,7 @@
 package com.zmdx.enjoyshow.main.pic;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,18 +11,20 @@ import android.support.v4.app.FragmentPagerAdapter;
  */
 public class PicFragmentPagerAdpater extends FragmentPagerAdapter {
 
+
     public PicFragmentPagerAdpater(FragmentManager manager, Context context) {
         super(manager);
     }
 
     @Override
     public Fragment getItem(int position) {
+        Fragment frag = null;
         if (position == 0) {
-            return new PicRecommendFragment();
+            frag = new PicRecommendFragment();
         } else if (position == 1) {
-            return new FollowFragment();
+            frag = new FollowFragment();
         }
-        return null;
+        return frag;
     }
 
     @Override

@@ -25,13 +25,16 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.zmdx.enjoyshow.ESApplication;
 import com.zmdx.enjoyshow.R;
+import com.zmdx.enjoyshow.common.ESPreferences;
 import com.zmdx.enjoyshow.entity.ESBullet;
+import com.zmdx.enjoyshow.main.login.LogoActivity;
 import com.zmdx.enjoyshow.main.pic.PicFragmentPagerAdpater;
 import com.zmdx.enjoyshow.main.show.Show8DetailActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
 import com.zmdx.enjoyshow.protocol.VShowUri;
+import com.zmdx.enjoyshow.user.ESUserManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
 import com.zmdx.enjoyshow.utils.LogHelper;
@@ -39,6 +42,8 @@ import com.zmdx.enjoyshow.utils.LogHelper;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by zhangyan on 15/10/26.
@@ -48,6 +53,10 @@ public class Fragment1 extends BaseFragment implements SwipeRefreshLayout.OnRefr
     private static final String TAG = "Fragment1";
 
     public static final String ACTION_PULL_REFRESH = "ac_pull_refresh";
+
+    public static final int MODE_DEFAULT = 1;
+
+    public static final int MODE_EXPRIENCE = 2;
 
     private TabLayout mTab;
 
@@ -73,6 +82,11 @@ public class Fragment1 extends BaseFragment implements SwipeRefreshLayout.OnRefr
     private AppBarLayout mAppBarLayout;
 
     public Fragment1() {
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Nullable
@@ -242,19 +256,25 @@ public class Fragment1 extends BaseFragment implements SwipeRefreshLayout.OnRefr
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = (Integer) v.getTag();
-                    ESBullet esb = mTopList.get(position);
-                    String themeId = "";
-                    try {
-                        VShowUri uri = new VShowUri().parse(esb.getUrl());
-                        themeId = uri.getmValue();
-                    } catch (VShowUri.VShowParserException e) {
+                    if (ESPreferences.getLoginStatus() == ESUserManager.STATUS_EXPERIENCE) {
+                        showExprienceDialog();
                         return;
                     }
 
-                    if (!TextUtils.isEmpty(themeId)) {
-                        Show8DetailActivity.start(v.getContext(), themeId);
-                    }
+                    int position = (Integer) v.getTag();
+                        ESBullet esb = mTopList.get(position);
+                        String themeId = "";
+                        try {
+                            VShowUri uri = new VShowUri().parse(esb.getUrl());
+                            themeId = uri.getmValue();
+                        } catch (VShowUri.VShowParserException e) {
+                            return;
+                        }
+
+                        if (!TextUtils.isEmpty(themeId)) {
+                            Show8DetailActivity.start(v.getContext(), themeId);
+                        }
+
                 }
             });
             return view;
@@ -274,5 +294,19 @@ public class Fragment1 extends BaseFragment implements SwipeRefreshLayout.OnRefr
         public boolean isViewFromObject(View view, Object object) {
             return view == object;
         }
+    }
+
+    private void showExprienceDialog() {
+        SweetAlertDialog dialog = new SweetAlertDialog(getActivity());
+        dialog.setTitleText("提示");
+        dialog.setContentText("您还没有登录,登录后能体验更多功能哦!");
+        dialog.setConfirmText("确定");
+        dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismissWithAnimation();
+            }
+        });
+        dialog.show();
     }
 }

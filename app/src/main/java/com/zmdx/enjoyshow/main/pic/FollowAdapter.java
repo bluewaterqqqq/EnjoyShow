@@ -13,6 +13,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.zmdx.enjoyshow.R;
+import com.zmdx.enjoyshow.common.ESPreferences;
 import com.zmdx.enjoyshow.entity.ESPhoto;
 import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.main.detail.ImageDetailActivity;
@@ -20,6 +21,7 @@ import com.zmdx.enjoyshow.main.profile.UserProfileActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
+import com.zmdx.enjoyshow.user.ESUserManager;
 import com.zmdx.enjoyshow.utils.ESDateFormat;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
@@ -28,6 +30,8 @@ import com.zmdx.enjoyshow.utils.LogHelper;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by zhangyan on 15/11/28.
@@ -45,12 +49,15 @@ public class FollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     private Context mContext;
 
+    private boolean mIsExprienceMode = false;
+
     public FollowAdapter(Context context, List<ESPhoto> data) {
         mData = data;
         mContext = context;
         mInflater = LayoutInflater.from(context);
         mCoverImageOptions = ImageLoaderOptionsUtils.getCoverImageOptions();
         mHeaderImageOptions = ImageLoaderOptionsUtils.getHeadImageOptions();
+        mIsExprienceMode = ESPreferences.getLoginStatus() == ESUserManager.STATUS_EXPERIENCE;
     }
 
     @Override
@@ -143,6 +150,10 @@ public class FollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public void onClick(View v) {
+        if (mIsExprienceMode) {
+            showExprienceDialog();
+            return;
+        }
         int id = v.getId();
         if (id == R.id.follow_cover) {
             String picSetId = (String) v.getTag();
@@ -157,6 +168,20 @@ public class FollowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             ESPhoto item = (ESPhoto) v.getTag();
             handlePraiseText(v, item);
         }
+    }
+
+    private void showExprienceDialog() {
+        SweetAlertDialog dialog = new SweetAlertDialog(mContext);
+        dialog.setTitleText("提示");
+        dialog.setContentText("您还没有登录,登录后能体验更多功能哦!");
+        dialog.setConfirmText("确定");
+        dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismissWithAnimation();
+            }
+        });
+        dialog.show();
     }
 
     private void handlePraiseText(final View tv, ESPhoto item) {

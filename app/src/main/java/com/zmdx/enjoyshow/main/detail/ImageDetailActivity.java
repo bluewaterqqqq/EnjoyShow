@@ -13,6 +13,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
+import com.tencent.mm.sdk.modelbase.BaseReq;
+import com.tencent.mm.sdk.modelbase.BaseResp;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.zmdx.enjoyshow.ESApplication;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
@@ -22,6 +30,7 @@ import com.zmdx.enjoyshow.entity.ESPhotoSet;
 import com.zmdx.enjoyshow.entity.ESPicInfo;
 import com.zmdx.enjoyshow.entity.ESUser;
 import com.zmdx.enjoyshow.main.detail.ui.ESPicSetView;
+import com.zmdx.enjoyshow.main.login.LogoActivity;
 import com.zmdx.enjoyshow.main.pic.BasePicFragment;
 import com.zmdx.enjoyshow.main.profile.UserProfileActivity;
 import com.zmdx.enjoyshow.network.ActionConstants;
@@ -36,6 +45,7 @@ import com.zmdx.enjoyshow.utils.LogHelper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -47,6 +57,7 @@ import android.text.Editable;
 import android.text.Selection;
 import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -61,12 +72,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import me.drakeet.materialdialog.MaterialDialog;
 import me.iwf.photopicker.PhotoPagerActivity;
 
 /**
  * Created by zhangyan on 15/11/21.
  */
-public class ImageDetailActivity extends BaseAppCompatActivity implements View.OnClickListener {
+public class ImageDetailActivity extends BaseAppCompatActivity implements View.OnClickListener, IWXAPIEventHandler {
 
     private static final int PIC_WIDTH = 650;
     private static String TAG = "ImageDetailActivity";
@@ -93,6 +105,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
     private ArrayList<ESComment> mCommentData = new ArrayList<ESComment>();
     private String mLastCommentId = "0";
     private boolean mPullingComments = false;
+    private IWXAPI api;
 
     public static void start(Context context, String pictureSetId) {
         Intent in = new Intent(context, ImageDetailActivity.class);
@@ -116,6 +129,32 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         initToolbar();
 
         pullData();
+
+        api = ESApplication.getWXAPI();
+        boolean result = api.registerApp(ESApplication.APP_ID);
+        LogHelper.d(TAG, "registerApp result :" + result);
+    }
+
+    /**
+     * @param flag 0分享给好友 1分享给朋友圈
+     */
+    private void wechatShare(int flag) {
+        WXWebpageObject webpage = new WXWebpageObject();
+        webpage.webpageUrl = "http://pandora.hdlocker.com/draftServer/photo_loadPictureSet.action?pictureSetId"
+                + mPicSetId + "&themeId=" + mData.getThemeCycledId();
+        WXMediaMessage msg = new WXMediaMessage(webpage);
+        msg.title = mData.getDescStr();
+        msg.description = mData.getDescStr();
+        //这里替换一张自己工程里的图片资源
+        Bitmap thumb = ImageLoaderManager.getImageLoader().loadImageSync(mData.getCoverUrl(), ImageLoaderOptionsUtils.getCoverImageOptions());
+        msg.setThumbImage(thumb);
+
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = String.valueOf(System.currentTimeMillis());
+        req.message = msg;
+        req.scene = flag == 0 ? SendMessageToWX.Req.WXSceneSession : SendMessageToWX.Req.WXSceneTimeline;
+        api.sendReq(req);
+        LogHelper.d(TAG, "send wechat share request");
     }
 
     private void initToolbar() {
@@ -151,7 +190,7 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case 1:
-                // TODO
+                showShareDialog();
                 break;
             case 3:
                 reportPicSet();
@@ -163,6 +202,39 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showShareDialog() {
+        View view = LayoutInflater.from(this).inflate(R.layout.share_layout, null);
+        final MaterialDialog dialog = new MaterialDialog(this);
+        dialog.setView(view);
+        dialog.setPositiveButton("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+
+        View friendView = view.findViewById(R.id.share2friend);
+        View circleView = view.findViewById(R.id.share2Cicle);
+
+        friendView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                wechatShare(0);
+                dialog.dismiss();
+            }
+        });
+
+        circleView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                wechatShare(1);
+                dialog.dismiss();
+            }
+        });
     }
 
     private boolean deletingPicSet = false;
@@ -705,5 +777,15 @@ public class ImageDetailActivity extends BaseAppCompatActivity implements View.O
         mCommentEt.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.SHOW_FORCED);
+    }
+
+    @Override
+    public void onReq(BaseReq baseReq) {
+        LogHelper.d(TAG, "onReq.......");
+    }
+
+    @Override
+    public void onResp(BaseResp baseResp) {
+        LogHelper.d(TAG, "onResp.......");
     }
 }

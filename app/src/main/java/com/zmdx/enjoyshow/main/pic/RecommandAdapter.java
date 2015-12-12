@@ -10,13 +10,17 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.zmdx.enjoyshow.R;
+import com.zmdx.enjoyshow.common.ESPreferences;
 import com.zmdx.enjoyshow.entity.ESPhoto;
 import com.zmdx.enjoyshow.main.detail.ImageDetailActivity;
+import com.zmdx.enjoyshow.user.ESUserManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderManager;
 import com.zmdx.enjoyshow.utils.ImageLoaderOptionsUtils;
 import com.zmdx.enjoyshow.utils.LogHelper;
 
 import java.util.List;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 /**
  * Created by zhangyan on 15/10/26.
@@ -32,11 +36,17 @@ public class RecommandAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private DisplayImageOptions mCoverImageOptions;
 //    private DisplayImageOptions mHeaderImageOptions;
 
+    private boolean mIsExprience = false;
+
+    private Context mContext;
+
     public RecommandAdapter(Context context, List<ESPhoto> data) {
+        mContext = context;
         mData = data;
         mInflater = LayoutInflater.from(context);
         mCoverImageOptions = ImageLoaderOptionsUtils.getCoverImageOptions();
 //        mHeaderImageOptions = ImageLoaderOptionsUtils.getHeadImageOptions();
+        mIsExprience = ESPreferences.getLoginStatus() == ESUserManager.STATUS_EXPERIENCE;
     }
 
     @Override
@@ -58,11 +68,30 @@ public class RecommandAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             @Override
             public void onClick(View v) {
+                if (mIsExprience) {
+                    showExprienceDialog();
+                    return;
+                }
                 int position = (Integer) v.getTag();
                 ESPhoto esPhoto = mData.get(position);
                 ImageDetailActivity.start(v.getContext(), esPhoto.getId());
             }
         });
+    }
+
+
+    private void showExprienceDialog() {
+        SweetAlertDialog dialog = new SweetAlertDialog(mContext);
+        dialog.setTitleText("提示");
+        dialog.setContentText("您还没有登录,登录后能体验更多功能哦!");
+        dialog.setConfirmText("确定");
+        dialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismissWithAnimation();
+            }
+        });
+        dialog.show();
     }
 
     @Override
@@ -131,7 +160,7 @@ public class RecommandAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public static class PicViewHolder extends RecyclerView.ViewHolder {
         public ImageView coverView;
-//        public ImageView headView;
+        //        public ImageView headView;
         public TextView reportView;
 //        public TextView userNameView;
 

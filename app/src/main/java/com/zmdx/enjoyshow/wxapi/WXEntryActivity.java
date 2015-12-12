@@ -39,15 +39,14 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     public static final String ACTION_ACCESS_TOKEN = "action_ac_token";
     public static final String ACTION_LOG_SUCC = "action_log_succ";
     public static final String ACTION_LOG_FAILED = "action_log_failed";
-    private static final String APP_ID = "wx81aaaad92e07a7fd";
     private static final String AppSecret = "3a4858c543e86591519b0a838810e258";
     private static final String TAG = "WXEntryActivity";
     private static final String REFRESH_TOKEN_BASE_URL = "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid="
-            + APP_ID + "&grant_type=refresh_token&refresh_token=";
+            + ESApplication.APP_ID + "&grant_type=refresh_token&refresh_token=";
     private static final String ACCESS_TOKEN_BASE_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="
-            + APP_ID + "&secret=" + AppSecret + "&grant_type=authorization_code&" + "code=";
+            + ESApplication.APP_ID + "&secret=" + AppSecret + "&grant_type=authorization_code&" + "code=";
     private static final int RETURN_MSG_TYPE_LOGIN = 1;
-    private IWXAPI mApi;
+    private IWXAPI mWxApi;
 
     public static void refreshToken() {
         String refreshToken = ESPreferences.getWXRefreshToken();
@@ -80,8 +79,17 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 第三个参数为是否做签名检查
-        mApi = WXAPIFactory.createWXAPI(this, APP_ID, !ESConfig.DEBUG);
-        mApi.handleIntent(getIntent(), this);
+        mWxApi = WXAPIFactory.createWXAPI(this, ESApplication.APP_ID, false);
+        boolean result = mWxApi.registerApp(ESApplication.APP_ID);
+        LogHelper.d(TAG, "registerApp result :" + result);
+        mWxApi.handleIntent(getIntent(), this);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        ESApplication.getWXAPI().handleIntent(intent, this);
     }
 
     @Override
@@ -91,16 +99,28 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onResp(BaseResp resp) {
+        LogHelper.d(TAG, "onResp");
+        int type = resp.getType();
         switch (resp.errCode) {
             case BaseResp.ErrCode.ERR_AUTH_DENIED:
             case BaseResp.ErrCode.ERR_USER_CANCEL:
-                onFailure();
+                if (type == 1) {
+                    // 登录授权验证
+                    onFailure();
+                } else if (type == 2) {
+                    // 取消分享
+                }
                 break;
             case BaseResp.ErrCode.ERR_OK:
-                //拿到了微信返回的code,立马再去请求access_token
-                String code = ((SendAuth.Resp) resp).code;
-                LogHelper.d(TAG, "onResp..... code=" + code);
-                requestToken(code);
+                if (type == 1) {
+                    //拿到了微信返回的code,立马再去请求access_token
+                    String code = ((SendAuth.Resp) resp).code;
+                    LogHelper.d(TAG, "onResp..... code=" + code);
+                    requestToken(code);
+                } else if (type == 2) {
+                    // 分享成功
+                    Toast.makeText(WXEntryActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }

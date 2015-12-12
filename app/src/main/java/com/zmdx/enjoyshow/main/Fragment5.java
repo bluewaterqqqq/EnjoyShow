@@ -130,7 +130,9 @@ public class Fragment5 extends BaseFragment implements View.OnClickListener {
                     mUser = ESUser.convertByJSON(userObj);
                     render();
                     renderFollowButton();
-                    ESUserManager.getInstance().saveUserInfo(mUser, true);
+                    if (mIsMine) {
+                        ESUserManager.getInstance().saveUserInfo(mUser, true);
+                    }
                 }
             }
         }, new Response.ErrorListener() {

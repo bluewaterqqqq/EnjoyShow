@@ -15,13 +15,16 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
+import com.zmdx.enjoyshow.ESApplication;
 import com.zmdx.enjoyshow.MainActivity;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.common.BaseAppCompatActivity;
 import com.zmdx.enjoyshow.common.ESConfig;
 import com.zmdx.enjoyshow.common.ESPreferences;
+import com.zmdx.enjoyshow.main.ExprienceActivity;
 import com.zmdx.enjoyshow.user.ESUserManager;
 import com.zmdx.enjoyshow.utils.LogHelper;
 import com.zmdx.enjoyshow.wxapi.WXEntryActivity;
@@ -32,12 +35,9 @@ import com.zmdx.enjoyshow.wxapi.WXEntryActivity;
  */
 public class LogoActivity extends BaseAppCompatActivity {
 
-    private static final String APP_ID = "wx81aaaad92e07a7fd";
     private static final String WX_APP_SCOPE = "snsapi_userinfo";
     private static final String WX_APP_STATE = "enjoyshow_wxlogin";
     private static final String TAG = "LogoActivity";
-
-    private IWXAPI mApi;
 
     private ProgressDialog mDialog;
 
@@ -59,6 +59,7 @@ public class LogoActivity extends BaseAppCompatActivity {
             }
         }
     };
+    private IWXAPI mApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,7 @@ public class LogoActivity extends BaseAppCompatActivity {
         setContentView(R.layout.logo_layout);
 
         // 第三个参数为是否做签名检查
-        mApi = WXAPIFactory.createWXAPI(this, APP_ID, !ESConfig.DEBUG);
+        mApi = ESApplication.getWXAPI();
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(WXEntryActivity.ACTION_ACCESS_TOKEN);
@@ -113,7 +114,12 @@ public class LogoActivity extends BaseAppCompatActivity {
 
     public void onClickTry(View view) {
         ESPreferences.saveLoginStatus(ESUserManager.STATUS_EXPERIENCE);
-        startMainActivity();
+        startExprienceActivity();
+    }
+
+    private void startExprienceActivity() {
+        Intent in = new Intent(this, ExprienceActivity.class);
+        startActivity(in);
     }
 
     private void showLoadingDialog() {
@@ -141,7 +147,7 @@ public class LogoActivity extends BaseAppCompatActivity {
             Toast.makeText(this, "请先更新微信应用", Toast.LENGTH_SHORT).show();
             return;
         }
-        mApi.registerApp(APP_ID);
+        mApi.registerApp(ESApplication.APP_ID);
         final SendAuth.Req req = new SendAuth.Req();
         req.scope = WX_APP_SCOPE;
         req.state = WX_APP_STATE;

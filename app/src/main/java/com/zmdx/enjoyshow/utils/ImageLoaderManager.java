@@ -4,6 +4,7 @@ package com.zmdx.enjoyshow.utils;
 import android.os.Environment;
 import android.os.StatFs;
 
+import com.nostra13.universalimageloader.cache.memory.MemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.zmdx.enjoyshow.ESApplication;
@@ -37,6 +38,10 @@ public class ImageLoaderManager {
             sImageLoader.destroy();
         }
         sImageLoader.init(config);
+    }
+
+    public MemoryCache getMemoryCache() {
+        return sImageLoader.getMemoryCache();
     }
 
     static long calculateDiskCacheSize() {

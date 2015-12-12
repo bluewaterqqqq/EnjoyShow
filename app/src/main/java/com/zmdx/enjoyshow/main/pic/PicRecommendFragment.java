@@ -16,6 +16,7 @@ import com.android.volley.error.VolleyError;
 import com.android.volley.request.JsonObjectRequest;
 import com.zmdx.enjoyshow.R;
 import com.zmdx.enjoyshow.entity.ESPhoto;
+import com.zmdx.enjoyshow.main.Fragment1;
 import com.zmdx.enjoyshow.network.ActionConstants;
 import com.zmdx.enjoyshow.network.RequestQueueManager;
 import com.zmdx.enjoyshow.network.UrlBuilder;
@@ -56,6 +57,12 @@ public class PicRecommendFragment extends BasePicFragment {
     private String mLastId = "0";
 
     private View mEntireView;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
